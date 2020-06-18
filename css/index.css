@@ -2,6 +2,7 @@ body {
     background-color: black;
 }
 .index-container {
+    display: flex;
     flex-flow: row;
     width: 100vw;
     min-height: 100vh;
@@ -11,11 +12,16 @@ body {
 }
 .index-right {
     flex: none;
-    width: 20%;
-    min-width: 200px;
+    width: 30%;
+    min-width: 300px;
+}
+.index-img-page-dot {
+    flex: none;
+    width: 30px;
 }
 .title-container {
     width: 100%;
+    padding: 1rem;
 }
 .title-container>img {
     width: 100%;
