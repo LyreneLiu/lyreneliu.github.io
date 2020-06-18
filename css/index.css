@@ -1,0 +1,24 @@
+body {
+    background-color: black;
+}
+.index-container {
+    flex-flow: row;
+    width: 100vw;
+    min-height: 100vh;
+}
+.index-left {
+    flex: 1;
+}
+.index-right {
+    flex: none;
+    width: 20%;
+    min-width: 200px;
+}
+.title-container {
+    width: 100%;
+}
+.title-container>img {
+    width: 100%;
+    height: auto;
+    filter: invert(1);
+}
