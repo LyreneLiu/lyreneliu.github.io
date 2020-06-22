@@ -15,9 +15,17 @@
                 <div class="index-right">
                     <div class="title-container">
                         <img src="./img/title.png">
-                    </div>
+					</div>
+					<div class="swiper-container">
+						<img v-for="pic in album" :src="'img/'+pic.name" :title="pic.text">
+					</div>
                 </div>
-                <div class="index-img-page-dot"></div>
+                <div class="index-img-page-dot">
+					<div class="page-dot" v-for="(pic,index) in album" :title="pic.text"
+						:style="albumSeleted===index+1?'':'background-color:var(--lyrene-dot-'+(index+1)+')'"
+						:class="{'page-dot-chosen':albumSeleted===index+1}" @click="toSwiper(index)">
+					</div>
+				</div>
             </div>
 		</div>
 

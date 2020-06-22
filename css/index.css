@@ -1,30 +1,85 @@
-body {
-    background-color: black;
+:root {
+    --lyrene-main-bg: lightslategray;
+    --lyrene-dot-1: #FF9FB2;
+    --lyrene-dot-2: #FBDCE2;
+    --lyrene-dot-3: Cornsilk;
+    --lyrene-dot-4: #594157;
+    --lyrene-dot-5: #27213C;
 }
 .index-container {
     display: flex;
     flex-flow: row;
+    background-color: var(--lyrene-main-bg, lightslategray);
     width: 100vw;
-    min-height: 100vh;
+    height: 100vh;
 }
-.index-left {
-    flex: 1;
-}
-.index-right {
-    flex: none;
-    width: 30%;
-    min-width: 300px;
-}
-.index-img-page-dot {
-    flex: none;
-    width: 30px;
-}
-.title-container {
-    width: 100%;
-    padding: 1rem;
-}
-.title-container>img {
-    width: 100%;
-    height: auto;
-    filter: invert(1);
-}
+/* GROUP: left */
+    .index-left {
+        flex: 1;
+    }
+/* GROUP: right */
+    .index-right {
+        flex: none;
+        display: flex;
+        flex-flow: column;
+        padding: 1rem;
+        width: 30%;
+        min-width: 300px;
+    }
+    .title-container {
+        width: 100%;
+        padding: 1rem;
+    }
+    .title-container>img {
+        width: 100%;
+        height: auto;
+        filter: invert(1);
+    }
+    .swiper-container {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        overflow: hidden;
+    }
+    .swiper-container::before {
+        content: "";
+        position: absolute;
+        z-index: 1;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        box-shadow: inset 0 0 10px var(--lyrene-main-bg, lightslategray),
+        inset 0 0 20px var(--lyrene-main-bg, lightslategray),
+        inset 0 0 30px var(--lyrene-main-bg, lightslategray),
+        inset 0 0 40px var(--lyrene-main-bg, lightslategray),
+        inset 0 0 50px var(--lyrene-main-bg, lightslategray);
+    }
+    .swiper-container>img {
+        position: absolute;
+        margin: auto;
+        top: 0;
+        width: auto;
+        height: 100%;
+    }
+/* GROUP: dot */
+    .index-img-page-dot {
+        flex: none;
+        flex-flow: column;
+        display: flex;
+        width: 15px;
+    }
+    .index-img-page-dot :nth-child(n) {
+        flex: 1;
+        width: 100%;
+        cursor: pointer;
+        transition: all 300ms;
+    }
+    .page-dot-chosen {
+        background-image: repeating-linear-gradient(135deg, white, transparent 3px);
+        box-shadow: inset 0 0 0 2px white;
+    }
