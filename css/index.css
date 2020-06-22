@@ -2,20 +2,123 @@
     --lyrene-main-bg: lightslategray;
     --lyrene-dot-1: #FF9FB2;
     --lyrene-dot-2: #FBDCE2;
-    --lyrene-dot-3: Cornsilk;
+    --lyrene-dot-3: #A89F68;
     --lyrene-dot-4: #594157;
     --lyrene-dot-5: #27213C;
 }
+* {
+    font-family: "Segoe UI", "Microsoft JhengHei", sans-serif;
+}
 .index-container {
+    position: relative;
     display: flex;
     flex-flow: row;
     background-color: var(--lyrene-main-bg, lightslategray);
     width: 100vw;
     height: 100vh;
+    overflow: hidden;
+}
+.index-container::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
 }
 /* GROUP: left */
     .index-left {
         flex: 1;
+        display: flex;
+        justify-content: center;
+    }
+    .index-left .left-child:nth-child(n) {
+        position: relative;
+        z-index: 0;
+        flex: 1;
+        display: flex;
+        flex-flow: column;
+        margin: 0 3%;
+        background-size: 10px 10px;
+        background-repeat: repeat;
+        max-width: 200px;
+        height: 80%;
+        color: white;
+        text-align: center;
+        font-size: 2.5rem;
+        font-weight: bold;
+        text-shadow: -3px 0 var(--lyrene-main-bg, #FF9FB2), 0 3px var(--lyrene-main-bg, #FF9FB2), 3px 0 var(--lyrene-main-bg, #FF9FB2), 0 -3px var(--lyrene-main-bg, #FF9FB2);
+        -webkit-writing-mode: vertical-lr;
+        writing-mode: vertical-lr;
+        letter-spacing: 1rem;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        cursor: pointer;
+        opacity: 0;
+        transition: all 1.5s;
+    }
+    .index-left .left-child:nth-child(odd) {
+        align-self: flex-start;
+        align-items: flex-start;
+        padding-top: 2rem;
+        transform: translateY(-100vh);
+    }
+    .index-left .left-child:nth-child(even) {
+        align-self: flex-end;
+        align-items: flex-end;
+        padding-bottom: 2rem;
+        transform: translateY(100vh);
+    }
+    .index-left .left-child:nth-child(1) {
+        background-image: linear-gradient(-45deg, var(--lyrene-dot-1, #FF9FB2) 25%, transparent 25%, transparent 50%, var(--lyrene-dot-1, #FF9FB2) 50%, var(--lyrene-dot-1, #FF9FB2) 75%, transparent 75%, transparent);
+    }
+    .index-left .left-child:nth-child(2) {
+        background-image: linear-gradient(-45deg, var(--lyrene-dot-2, #FF9FB2) 25%, transparent 25%, transparent 50%, var(--lyrene-dot-2, #FF9FB2) 50%, var(--lyrene-dot-2, #FF9FB2) 75%, transparent 75%, transparent);
+    }
+    .index-left .left-child:nth-child(3) {
+        background-image: linear-gradient(-45deg, var(--lyrene-dot-3, #FF9FB2) 25%, transparent 25%, transparent 50%, var(--lyrene-dot-3, #FF9FB2) 50%, var(--lyrene-dot-3, #FF9FB2) 75%, transparent 75%, transparent);
+    }
+    .index-left .left-child:nth-child(4) {
+        background-image: linear-gradient(-45deg, var(--lyrene-dot-4, #FF9FB2) 25%, transparent 25%, transparent 50%, var(--lyrene-dot-4, #FF9FB2) 50%, var(--lyrene-dot-4, #FF9FB2) 75%, transparent 75%, transparent);
+    }
+    .index-left .left-child:nth-child(n)::after {
+        content: "";
+        position: absolute;
+        z-index: 1;
+        left: 0;
+        width: 100%;
+    }
+    .main-btn-1::after {
+        bottom: 0;
+        border-top: 200px solid transparent;
+        border-bottom: 0 solid transparent;
+        border-right: 400px solid lightslategray;
+    }
+    .main-btn-2::after {
+        top: 0;
+        border-top: 200px solid lightslategray;
+        border-bottom: 0 solid transparent;
+        border-right: 400px solid transparent;
+    }
+    .main-btn-3::after {
+        bottom: 0;
+        border-top: 200px solid transparent;
+        border-bottom: 0 solid transparent; 
+        border-left: 400px solid lightslategray;
+    }
+    .main-btn-4::after {
+        top: 0;
+        border-top: 200px solid lightslategray;
+        border-bottom: 0 solid transparent;
+        border-left: 400px solid transparent;
+    }
+    .left-child :nth-child(n) {
+        flex: 1;
+    }
+    .left-child .btn-t-en {
+        flex: .7;
+        font-size: 1.5rem;
+        letter-spacing: .5rem;
     }
 /* GROUP: right */
     .index-right {
@@ -80,6 +183,8 @@
         transition: all 300ms;
     }
     .page-dot-chosen {
-        background-image: repeating-linear-gradient(135deg, white, transparent 3px);
+        background-image: linear-gradient(-45deg, white 25%, transparent 25%, transparent 50%, white 50%, white 75%, transparent 75%, transparent);
+        background-size: 5px 5px;
+        background-repeat: repeat;
         box-shadow: inset 0 0 0 2px white;
     }
