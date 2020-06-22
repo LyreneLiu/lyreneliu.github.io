@@ -7,11 +7,11 @@ $(document).ready(function () {
 		data: function () {
 			return {
 				album: [
-					{ name: "album-1.jpg", text: "ME" },
-					{ name: "album-2.jpg", text: "OUTGOING" },
-					{ name: "album-3.jpg", text: "MY FAVORITE" },
-					{ name: "album-4.jpg", text: "SWEET TOOTH" },
-					{ name: "album-5.jpg", text: "HAPPINESS" }
+					{ name: "album-1.JPG", text: "ME" },
+					{ name: "album-2.JPG", text: "OUTGOING" },
+					{ name: "album-3.JPG", text: "MY FAVORITE" },
+					{ name: "album-4.JPG", text: "SWEET TOOTH" },
+					{ name: "album-5.JPG", text: "HAPPINESS" }
 				],
 				albumH: null,
 				albumSeleted: 0,
