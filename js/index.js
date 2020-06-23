@@ -28,26 +28,57 @@ $(document).ready(function () {
 					.attr("src", "./img/loading.svg");
 			});
 			this.$nextTick(() => {
-				this.INITswiper();
-				let childs = $(".index-left :nth-child(n)");
-				childs.css("transform", "translateY(0)");
-				setInterval(() => childs.css("opacity", "1"), 500);
+				$(".swiper-container")
+				.append($(".swiper-container :nth-child(1)").clone(true));
+				this.INITswiper(); this.slideLeft();
 			});
 		},
 		watch: {
 		},
 		methods: {
+		//GROUP: animation
+			slideLeft: function () {
+				let i = 1;
+				let child = $(".index-left :nth-child(" + i + ")");
+				child.css("transform", "translateY(0)");
+				setTimeout(() => child.css("opacity", "1"), 500);
+				let left = setInterval(() => {
+					i += 1;
+					let _child = $(".index-left :nth-child(" + i + ")");
+					if (_child.length > 0) {
+						_child.css("transform", "translateY(0)");
+						setTimeout(() => _child.css("opacity", "1"), 500);	
+					} else {
+						clearInterval(left); this.slideRight();
+					}
+				}, 500);
+			},
+			slideRight: function () {
+				setTimeout(() => {
+					let right = $(".index-right");
+					right.css("transform", "translateY(0)");
+					setTimeout(() => {
+						right.css("opacity", "1");
+						setTimeout(() => {
+							this.albumSeleted += 1;
+							this.setSwiperTimer();
+							window.addEventListener("resize", () => {
+								clearInterval(this.albumChanging);
+								clearTimeout(this.albumReload);
+								this.INITswiper();
+								this.toSwiper(this.albumSeleted - 1);
+							});
+						}, 500);
+					}, 500);
+				}, 500);
+			},
 		//GROUP: swiper
 			INITswiper: function () {
 				this.albumH = $(".swiper-container").height();
 				let l = this.album.length;
-				$(".swiper-container")
-					.append($(".swiper-container :nth-child(1)").clone(true));
 				for (let i = 1; i < l + 1; i ++) {
 					this.moveSwiper(i + 1, this.albumH * i, true);
 				}
-				this.albumSeleted += 1;
-				this.setSwiperTimer();
 			},
 			setSwiperTimer: function () {
 				let l = this.album.length;
@@ -71,7 +102,7 @@ $(document).ready(function () {
 								}		
 						}, 3500);
 					}
-				}
+				}	
 			},
 			moveSwiper: function (index, re, ani) {
 				$(".swiper-container :nth-child(" + index + ")")
@@ -79,15 +110,17 @@ $(document).ready(function () {
 					.css("transform", "translateY(" + re + "px)");
 			},
 			toSwiper: function (i) {
-				clearInterval(this.albumChanging);
-				clearTimeout(this.albumReload);
-				let l = this.album.length;
-				this.albumSeleted = i + 1;
-				for (let j = 1; j < l + 1; j ++) {
-					let reduce = (j - i - 1) * this.albumH;
-					this.moveSwiper(j, reduce, true);
+				if (this.albumSeleted !== 0) {
+					clearInterval(this.albumChanging);
+					clearTimeout(this.albumReload);
+					let l = this.album.length;
+					this.albumSeleted = i + 1;
+					for (let j = 1; j < l + 1; j ++) {
+						let reduce = (j - i - 1) * this.albumH;
+						this.moveSwiper(j, reduce, true);
+					}
+					this.setSwiperTimer();
 				}
-				this.setSwiperTimer();
 			}
 		}
 	});

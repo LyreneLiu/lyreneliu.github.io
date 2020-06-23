@@ -18,14 +18,6 @@
     height: 100vh;
     overflow: hidden;
 }
-.index-container::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-}
 /* GROUP: left */
     .index-left {
         flex: 1;
@@ -128,6 +120,8 @@
         padding: 1rem;
         width: 30%;
         min-width: 300px;
+        transform: translateY(-100vh);
+        transition: all 1s;
     }
     .title-container {
         width: 100%;
