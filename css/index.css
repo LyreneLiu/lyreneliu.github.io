@@ -64,6 +64,7 @@ body {
         -webkit-writing-mode: vertical-lr;
         writing-mode: vertical-lr;
         letter-spacing: 1rem;
+        overflow: hidden;
         -webkit-user-select: none;
         -moz-user-select: none;
         cursor: pointer;
@@ -226,7 +227,8 @@ body {
         width: 85%;
         height: auto;
         max-width: none;
-        max-height: 100px;
+        height: 80px;
+        font-size: 30px;
         -webkit-writing-mode: inherit;
         writing-mode: inherit;
     }
