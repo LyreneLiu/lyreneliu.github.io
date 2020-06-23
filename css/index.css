@@ -2,7 +2,7 @@
     --lyrene-main-bg: #1e242b;
     --lyrene-img-bg: #3d4650;
     --lyrene-dot-1: #FF9FB2;
-    --lyrene-dot-2: #FBDCE2;
+    --lyrene-dot-2: #567e8a;
     --lyrene-dot-3: #A89F68;
     --lyrene-dot-4: #80637d;
     --lyrene-dot-5: #68676f;
@@ -227,8 +227,9 @@ body {
         width: 85%;
         height: auto;
         max-width: none;
-        height: 80px;
-        font-size: 30px;
+        max-height: 100px;
+        min-height: 80px;
+        font-size: 25px;
         -webkit-writing-mode: inherit;
         writing-mode: inherit;
     }
@@ -279,6 +280,11 @@ body {
         border-style: solid solid solid solid;
         border-width: 0 50px 100px 0;
         width: 50px;
+    }
+    .left-child .btn-t-en {
+        flex: none;
+        font-size: 15px;
+        letter-spacing: 5px;
     }
     .index-right {
         flex: .7;
