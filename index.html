@@ -3,6 +3,7 @@
 	<head>
 		<meta charset="utf-8">
 		<meta name="author" content="Lyrene">
+		<meta content="width=device-width, initial-scale=1, user-scalable=no" name="viewport">
 		<meta name="copyright" content="Copyright © 2020 Lyrene All rights reserved">
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
 		<link rel="stylesheet" href="./css/index.css">
@@ -10,19 +11,18 @@
 	</head>
 	<body>
 		<div id="index">
+			<div class="header"><img src="./img/title.png"></div>
             <div class="index-container">
                 <div class="index-left">
-					<div class="left-child main-btn-1"><div class="btn-t-en">ABOUT LYRENE</div><div>關於我</div></div>
-					<div class="left-child main-btn-2"><div class="btn-t-en">WORKS</div><div>作品集</div></div>
-					<div class="left-child main-btn-3"><div class="btn-t-en">FRONTEND MEMO</div><div>前端那些毛</div></div>
-					<div class="left-child main-btn-4"><div class="btn-t-en">DAILY</div><div>日常瑣事</div></div>
+					<div id="left-1" class="left-child main-btn-1"><div class="btn-t-en">ABOUT LYRENE</div><div>關於我</div></div>
+					<div id="left-2" class="left-child main-btn-2"><div class="btn-t-en">WORKS</div><div>作品集</div></div>
+					<div id="left-3" class="left-child main-btn-3"><div class="btn-t-en">FRONTEND MEMO</div><div>前端那些毛</div></div>
+					<div id="left-4" class="left-child main-btn-4"><div class="btn-t-en">DAILY</div><div>日常瑣事</div></div>
 				</div>
-                <div class="index-right">
-                    <div class="title-container">
-                        <img src="./img/title.png">
-					</div>
-					<div class="swiper-container">
-						<img v-for="pic in album" :src="'img/'+pic.name" :title="pic.text">
+                <div id="index-right" class="index-right">
+                    <div class="title-container"><img src="./img/title.png"></div>
+					<div id="swiper-container" class="swiper-container">
+						<img v-for="(pic,index) in album" :src="'img/'+pic.name" :id="'album-'+(index+1)" :title="pic.text">
 					</div>
                 </div>
                 <div class="index-img-page-dot">

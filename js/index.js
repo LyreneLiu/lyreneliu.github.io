@@ -13,41 +13,61 @@ $(document).ready(function () {
 					{ name: "album-4.JPG", text: "SWEET TOOTH" },
 					{ name: "album-5.JPG", text: "HAPPINESS" }
 				],
-				albumH: null,
+				albumCalc: null,
+				albumDirect: "Y",
 				albumSeleted: 0,
 				albumChanging: null,
 				albumReload: null
 			};
 		},
 		mounted: function () {
+			window.addEventListener("resize", () => {
+				this.rwdWH(() => {
+					clearInterval(this.albumChanging);
+					clearTimeout(this.albumReload);
+					this.INITswiper();
+					this.toSwiper(this.albumSeleted - 1);
+				});
+			});
 			$("img").one("error", function (e) {
-				$(this)
-					.css("width", "50px")
-					.css("height", "50px")
-					.css("top", "calc(50% - 25px)")
-					.attr("src", "./img/loading.svg");
+				$(this).addClass("error-img").attr("src", "./img/loading.svg");
 			});
 			this.$nextTick(() => {
-				$(".swiper-container")
-				.append($(".swiper-container :nth-child(1)").clone(true));
-				this.INITswiper(); this.slideLeft();
+				this.rwdWH(() => {
+					let l = this.album.length + 1;
+					$(".swiper-container").append(
+						$("#album-1").clone(true).attr("id", `album-${l}`)
+					);
+					this.INITswiper(); this.slideLeft();
+				});
 			});
 		},
 		watch: {
 		},
 		methods: {
+			//RWD width & height
+			rwdWH: function (CB) {
+				let vw = window.innerWidth, vh = window.innerHeight;
+				document.documentElement.style.setProperty("--vw", `${vw}px`);
+				document.documentElement.style.setProperty("--vh", `${vh}px`);
+				document.documentElement.style.setProperty("--flex", "none");
+				setTimeout(() => {
+					document.documentElement.style.setProperty("--flex", "flex");
+					typeof CB === "function" && CB();
+				}, 0);
+			},
 		//GROUP: animation
 			slideLeft: function () {
 				let i = 1;
-				let child = $(".index-left :nth-child(" + i + ")");
-				child.css("transform", "translateY(0)");
-				setTimeout(() => child.css("opacity", "1"), 500);
+				let child = document.getElementById(`left-${i}`);
+				child.style.transform = `translate${this.albumDirect}(0)`;
+				setTimeout(() => child.style.opacity = "1", 500);
 				let left = setInterval(() => {
 					i += 1;
-					let _child = $(".index-left :nth-child(" + i + ")");
-					if (_child.length > 0) {
-						_child.css("transform", "translateY(0)");
-						setTimeout(() => _child.css("opacity", "1"), 500);	
+					let _child = document.getElementById(`left-${i}`);
+					if (_child) {
+						_child.style.transform = `translate${this.albumDirect}(0)`;
+						setTimeout(() => _child.style.opacity = "1", 500);
 					} else {
 						clearInterval(left); this.slideRight();
 					}
@@ -55,29 +75,25 @@ $(document).ready(function () {
 			},
 			slideRight: function () {
 				setTimeout(() => {
-					let right = $(".index-right");
-					right.css("transform", "translateY(0)");
+					let right = document.getElementById("index-right");
+					right.style.transform = `translate${this.albumDirect}(0)`;
 					setTimeout(() => {
-						right.css("opacity", "1");
+						right.style.opacity = "1";
 						setTimeout(() => {
-							this.albumSeleted += 1;
-							this.setSwiperTimer();
-							window.addEventListener("resize", () => {
-								clearInterval(this.albumChanging);
-								clearTimeout(this.albumReload);
-								this.INITswiper();
-								this.toSwiper(this.albumSeleted - 1);
-							});
+							this.albumSeleted += 1; this.setSwiperTimer();
 						}, 500);
 					}, 500);
 				}, 500);
 			},
 		//GROUP: swiper
 			INITswiper: function () {
-				this.albumH = $(".swiper-container").height();
+				let _w = $("#swiper-container").width(),
+					_h = $("#swiper-container").height();
+				this.albumCalc = _w > _h ? _w : _h;
+				this.albumDirect = _w > _h ? "X" : "Y";
 				let l = this.album.length;
 				for (let i = 1; i < l + 1; i ++) {
-					this.moveSwiper(i + 1, this.albumH * i, true);
+					this.moveSwiper(i + 1, this.albumCalc * i, true);
 				}
 			},
 			setSwiperTimer: function () {
@@ -92,12 +108,12 @@ $(document).ready(function () {
 				let _selected = this.albumSeleted === 1 ?
 					(l + 1) : this.albumSeleted;
 				for (let i = 1; i <= l + 1; i ++) {
-					let reduce = (i - _selected) * this.albumH;
+					let reduce = (i - _selected) * this.albumCalc;
 					this.moveSwiper(i, reduce, true);
 					if (this.albumSeleted === 1 && i === _selected) {
 						this.albumReload = setTimeout(() => {
 							for (let j = 1; j <= l + 1; j ++) {
-								let _reduce = (j - 1) * this.albumH;
+								let _reduce = (j - 1) * this.albumCalc;
 								this.moveSwiper(j, _reduce, false);
 								}		
 						}, 3500);
@@ -105,9 +121,9 @@ $(document).ready(function () {
 				}	
 			},
 			moveSwiper: function (index, re, ani) {
-				$(".swiper-container :nth-child(" + index + ")")
+				$("#album-" + index)
 					.css("transition", ani ? "all 300ms" : "none")
-					.css("transform", "translateY(" + re + "px)");
+					.css("transform", `translate${this.albumDirect}(${re}px)`);
 			},
 			toSwiper: function (i) {
 				if (this.albumSeleted !== 0) {
@@ -116,7 +132,7 @@ $(document).ready(function () {
 					let l = this.album.length;
 					this.albumSeleted = i + 1;
 					for (let j = 1; j < l + 1; j ++) {
-						let reduce = (j - i - 1) * this.albumH;
+						let reduce = (j - i - 1) * this.albumCalc;
 						this.moveSwiper(j, reduce, true);
 					}
 					this.setSwiperTimer();
