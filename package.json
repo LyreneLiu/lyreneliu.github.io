@@ -1,7 +1,7 @@
 {
   "name": "lyrenesmurmur",
-  "version": "1.0.7",
-  "description": "[FIX] index: html overflow",
+  "version": "1.0.8",
+  "description": "[FEAT] Safari icons",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
