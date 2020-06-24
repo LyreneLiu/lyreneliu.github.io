@@ -194,7 +194,6 @@ body {
         transition: all 300ms;
     }
     .left-child:active .btn-t-en {
-        font-size: 1.5vw;
         letter-spacing: 10px;
     }
 /* GROUP: right */
