@@ -1,7 +1,7 @@
 {
   "name": "lyrenesmurmur",
-  "version": "1.0.5",
-  "description": "[FEAT] index: btn animation",
+  "version": "1.0.6",
+  "description": "[FEAT] index: body overflow",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
