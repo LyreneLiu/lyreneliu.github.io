@@ -43,6 +43,7 @@ body {
         flex: 1;
         display: flex;
         justify-content: center;
+        padding: 0 10px;
     }
     .index-left .left-child:nth-child(n) {
         position: relative;
@@ -50,20 +51,20 @@ body {
         flex: 1;
         display: flex;
         flex-flow: column;
-        margin: 0 3%;
-        box-shadow: inset 0 0 1px #1e242b;
+        justify-content: center;
+        margin: 0 10px;
         background-size: 10px 10px;
         background-repeat: repeat;
         max-width: 200px;
         height: 80%;
         color: white;
         text-align: center;
-        font-size: 35px;
+        font-size: 3vw;
         font-weight: bold;
         text-shadow: 3px 3px 3px var(--lyrene-main-bg, #FF9FB2);
         -webkit-writing-mode: vertical-lr;
         writing-mode: vertical-lr;
-        letter-spacing: 1rem;
+        letter-spacing: 10px;
         overflow: hidden;
         -webkit-user-select: none;
         -moz-user-select: none;
@@ -132,12 +133,8 @@ body {
         border-width: 0 250px 150px 0;
         width: 250px;
     }
-    .left-child :nth-child(n) {
-        flex: 1;
-    }
     .left-child .btn-t-en {
-        flex: .7;
-        font-size: 20px;
+        font-size: 1.5vw;
         letter-spacing: 5px;
     }
 /* GROUP: right */
@@ -146,6 +143,7 @@ body {
         display: flex;
         flex-flow: column;
         padding: 1rem;
+        padding-left: 0;
         width: 30%;
         min-width: 300px;
         transform: translateY(-100vh);
@@ -220,16 +218,17 @@ body {
         padding-top: 65px;
     }
     .index-left {
+        padding: 5px 0;
         flex-flow: column;
     }
     .index-left .left-child:nth-child(n) {
-        margin: 3% 0;
+        margin: 5px 0;
         width: 85%;
         height: auto;
         max-width: none;
         max-height: 100px;
         min-height: 80px;
-        font-size: 25px;
+        font-size: 5vw;
         -webkit-writing-mode: inherit;
         writing-mode: inherit;
     }
@@ -280,11 +279,6 @@ body {
         border-style: solid solid solid solid;
         border-width: 0 50px 100px 0;
         width: 50px;
-    }
-    .left-child .btn-t-en {
-        flex: none;
-        font-size: 15px;
-        letter-spacing: 5px;
     }
     .index-right {
         flex: .7;
