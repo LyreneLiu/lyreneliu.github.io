@@ -8,13 +8,15 @@
     --lyrene-dot-5: #68676f;
     --lyrene-mp: 10px;
 }
-body {
+html {
     position: fixed;
     width: 100%;
     height: 100%;
+    overflow-x: hidden;
+}
+body {
     font-family: -apple-system, BlinkMacSystemFont, Verdana, "Microsoft JhengHei", sans-serif;
     background-color: var(--lyrene-main-bg, #1e242b);
-    overflow-x: hidden;
 }
 .index-container {
     position: relative;

@@ -1,7 +1,7 @@
 {
   "name": "lyrenesmurmur",
-  "version": "1.0.6",
-  "description": "[FEAT] index: body overflow",
+  "version": "1.0.7",
+  "description": "[FIX] index: html overflow",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
