@@ -21,6 +21,17 @@ $(document).ready(function () {
 			};
 		},
 		mounted: function () {
+			//prevent mobile user resizing the web
+			let lastTouchEnd = 0;
+			document.addEventListener("touchstart", event => {
+				event.touches.length > 1 && event.preventDefault();
+			}, { passive: false });
+			document.addEventListener("touchend", (event) => {
+				const now = (new Date()).getTime();
+				now - lastTouchEnd <= 300 && event.preventDefault();
+				lastTouchEnd = now;
+			}, false);
+			//resize event (on computer web)
 			window.addEventListener("resize", () => {
 				this.rwdWH(() => {
 					clearInterval(this.albumChanging);
@@ -29,9 +40,11 @@ $(document).ready(function () {
 					this.toSwiper(this.albumSeleted - 1);
 				});
 			});
+			//img can't be loaded
 			$("img").one("error", function (e) {
 				$(this).addClass("error-img").attr("src", "./img/loading.svg");
 			});
+			//after initing doms
 			this.$nextTick(() => {
 				this.rwdWH(() => {
 					let l = this.album.length + 1;
@@ -42,13 +55,11 @@ $(document).ready(function () {
 				});
 			});
 		},
-		watch: {
-		},
+		watch: {},
 		methods: {
-			//RWD width & height
+			//RWD height
 			rwdWH: function (CB) {
-				let vw = window.innerWidth, vh = window.innerHeight;
-				document.documentElement.style.setProperty("--vw", `${vw}px`);
+				let vh = window.innerHeight;
 				document.documentElement.style.setProperty("--vh", `${vh}px`);
 				document.documentElement.style.setProperty("--flex", "none");
 				setTimeout(() => {
