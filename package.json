@@ -1,7 +1,7 @@
 {
   "name": "lyrenesmurmur",
-  "version": "1.0.2",
-  "description": "[FIX] index: Safari css",
+  "version": "1.0.3",
+  "description": "[FEAT] shortcut, description",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

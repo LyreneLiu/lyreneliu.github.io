@@ -26,7 +26,7 @@ $(document).ready(function () {
 			document.addEventListener("touchstart", event => {
 				event.touches.length > 1 && event.preventDefault();
 			}, { passive: false });
-			document.addEventListener("touchend", (event) => {
+			document.addEventListener("touchend", event => {
 				const now = (new Date()).getTime();
 				now - lastTouchEnd <= 300 && event.preventDefault();
 				lastTouchEnd = now;
@@ -148,7 +148,9 @@ $(document).ready(function () {
 					}
 					this.setSwiperTimer();
 				}
-			}
+			},
+		//GROUP: swiper
+			
 		}
 	});
 
