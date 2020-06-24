@@ -76,11 +76,10 @@ body {
         max-width: 250px;
         height: 80%;
         /* font */
-        color: white;
+        color: var(--lyrene-main-bg, #1e242b);
         text-align: center;
         font-size: 3vw;
         font-weight: bold;
-        text-shadow: 3px 3px 3px var(--lyrene-main-bg, #1e242b);
         -webkit-writing-mode: vertical-lr;
         writing-mode: vertical-lr;
         letter-spacing: 10px;
@@ -89,20 +88,36 @@ body {
         -webkit-user-select: none;
         -moz-user-select: none;
         cursor: pointer;
-        opacity: 0;
-        transition: all 1.5s;
+        transition: all var(--hover, 1.5s);
+    }
+    .index-left .left-child:active {
+        height: 100%;
+        letter-spacing: 15px;
+    }
+    .index-left .left-child:active::after {
+        display: none;
     }
     .index-left .left-child:nth-child(odd) {
-        align-self: flex-start;
         align-items: flex-start;
-        padding-top: 2rem;
+        align-self: flex-start;
+        text-align: left;
         transform: translateY(-100vh);
     }
     .index-left .left-child:nth-child(even) {
-        align-self: flex-end;
         align-items: flex-end;
-        padding-bottom: 2rem;
+        align-self: flex-end;
+        text-align: right;
         transform: translateY(100vh);
+    }
+    .left-child :nth-child(n) {
+        height: 100%;
+        background-color: rgba(255, 255, 255, .75);
+    }
+    .left-child:nth-child(odd) :nth-child(n) {
+        padding-top: 2rem;
+    }
+    .left-child:nth-child(even) :nth-child(n) {
+        padding-bottom: 2rem;
     }
     .index-left .left-child::after {
         content: "";
@@ -111,15 +126,35 @@ body {
     }
     .index-left .left-child:nth-child(1) {
         background-image: linear-gradient(-45deg, var(--lyrene-dot-1, #FF9FB2) 25%, transparent 25%, transparent 50%, var(--lyrene-dot-1, #FF9FB2) 50%, var(--lyrene-dot-1, #FF9FB2) 75%, transparent 75%, transparent);
+        opacity: var(--opacity-1, 0);
+    }
+    .index-left .left-child:nth-child(1):hover,
+    .index-left .left-child:nth-child(1):active {
+        opacity: 1;
     }
     .index-left .left-child:nth-child(2) {
         background-image: linear-gradient(-45deg, var(--lyrene-dot-2, #567e8a) 25%, transparent 25%, transparent 50%, var(--lyrene-dot-2, #567e8a) 50%, var(--lyrene-dot-2, #567e8a) 75%, transparent 75%, transparent);
+        opacity: var(--opacity-2, 0);
+    }
+    .index-left .left-child:nth-child(2):hover,
+    .index-left .left-child:nth-child(2):active {
+        opacity: 1;
     }
     .index-left .left-child:nth-child(3) {
         background-image: linear-gradient(-45deg, var(--lyrene-dot-3, #A89F68) 25%, transparent 25%, transparent 50%, var(--lyrene-dot-3, #A89F68) 50%, var(--lyrene-dot-3, #A89F68) 75%, transparent 75%, transparent);
+        opacity: var(--opacity-3, 0);
+    }
+    .index-left .left-child:nth-child(3):hover,
+    .index-left .left-child:nth-child(3):active {
+        opacity: 1;
     }
     .index-left .left-child:nth-child(4) {
         background-image: linear-gradient(-45deg, var(--lyrene-dot-4, #80637d) 25%, transparent 25%, transparent 50%, var(--lyrene-dot-4, #80637d) 50%, var(--lyrene-dot-4, #80637d) 75%, transparent 75%, transparent);
+        opacity: var(--opacity-4, 0);
+    }
+    .index-left .left-child:nth-child(4):hover,
+    .index-left .left-child:nth-child(4):active {
+        opacity: 1;
     }
     .main-btn-1::after {
         bottom: 0;
@@ -156,6 +191,11 @@ body {
     .left-child .btn-t-en {
         font-size: 1.5vw;
         letter-spacing: 5px;
+        transition: all 300ms;
+    }
+    .left-child:active .btn-t-en {
+        font-size: 1.5vw;
+        letter-spacing: 10px;
     }
 /* GROUP: right */
     .index-right {
@@ -274,15 +314,17 @@ body {
     }
     .index-left .left-child:nth-child(odd) {
         align-items: center;
-        padding-top: 0;
-        padding-left: 1rem;
+        text-align: center;
         transform: translateY(100vh);
     }
     .index-left .left-child:nth-child(even) {
         align-items: center;
-        padding-bottom: 0;
-        padding-right: 1rem;
+        text-align: center;
         transform: translateY(100vh);
+    }
+    .index-left .left-child:active {
+        width: 100%;
+        height: auto;
     }
     .main-btn-1::after {
         bottom: 0;
@@ -320,6 +362,17 @@ body {
         border-width: 0 50px 100px 0;
         width: 50px;
     }
+    .left-child :nth-child(n) {
+        width: 100%;
+        height: auto;
+    }
+    .left-child:nth-child(odd) :nth-child(n) {
+        padding-top: 0;
+    }
+    .left-child:nth-child(even) :nth-child(n) {
+        padding-bottom: 0;
+    }
+
     .left-child .btn-t-en {
         font-size: 2.5vw;
     }

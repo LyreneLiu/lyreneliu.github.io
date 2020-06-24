@@ -60,26 +60,29 @@ $(document).ready(function () {
 			//RWD height
 			rwdWH: function (CB) {
 				let vh = window.innerHeight;
-				document.documentElement.style.setProperty("--vh", `${vh}px`);
-				document.documentElement.style.setProperty("--flex", "none");
+				this.changeCssRoot("--vh", `${vh}px`);
+				this.changeCssRoot("--flex", "none");
 				setTimeout(() => {
-					document.documentElement.style.setProperty("--flex", "flex");
+					this.changeCssRoot("--flex", "flex");
 					typeof CB === "function" && CB();
 				}, 0);
 			},
 		//GROUP: animation
 			slideLeft: function () {
-				let i = 1;
+				let i = 1, j = 1;
 				let child = document.getElementById(`left-${i}`);
 				child.style.transform = `translate${this.albumDirect}(0)`;
-				setTimeout(() => child.style.opacity = "1", 500);
+				setTimeout(() => this.changeCssRoot(`--opacity-${j}`, ".6"), 500);
 				let left = setInterval(() => {
 					i += 1;
 					let _child = document.getElementById(`left-${i}`);
 					if (_child) {
 						_child.style.transform = `translate${this.albumDirect}(0)`;
-						setTimeout(() => _child.style.opacity = "1", 500);
+						setTimeout(() => {
+							j += 1; this.changeCssRoot(`--opacity-${j}`, ".6");
+						}, 500);
 					} else {
+						this.changeCssRoot("--hover", "300ms");
 						clearInterval(left); this.slideRight();
 					}
 				}, 500);
@@ -149,8 +152,10 @@ $(document).ready(function () {
 					this.setSwiperTimer();
 				}
 			},
-		//GROUP: swiper
-			
+		//GROUP: others
+			changeCssRoot: function (property, v) {
+				document.documentElement.style.setProperty(property, v);
+			}
 		}
 	});
 
