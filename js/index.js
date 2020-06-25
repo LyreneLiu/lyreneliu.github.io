@@ -15,7 +15,7 @@ $(document).ready(function () {
 					});
 					typeof v.callback === "function"
 					&& v.callback(1);
-					setTimeout(() => wait.o = false, 500);
+					setTimeout(() => wait.o = false, 1500);
 				} else if (!wait.h
 				&& now - last < 0 && now < v.vh - 50) {
 					wait.h = true;
@@ -24,7 +24,7 @@ $(document).ready(function () {
 					});
 					typeof v.callback === "function"
 					&& v.callback(0);
-					setTimeout(() => wait.h = false, 500);
+					setTimeout(() => wait.h = false, 1500);
 				}
 				last = now;
 			});
