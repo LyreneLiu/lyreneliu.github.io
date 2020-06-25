@@ -9,7 +9,7 @@ $(document).ready(function () {
 			let scrolling = () => {
 				let v = binding.value();
 				now = el.scrollTop;
-				if (now < v.heights[1]) {
+				if (now < v.heights[1] + 50) {
 					if (now - last > 0) {
 						el.scrollTo({
 							top: v.heights[1],
@@ -61,7 +61,8 @@ $(document).ready(function () {
 				albumChanging: null,
 				albumReload: null,
 				_swiper: null,
-				vh: 0
+				vh: 0,
+				disabledAni: false
 			};
 		},
 		mounted: function () {
@@ -90,7 +91,7 @@ $(document).ready(function () {
 			});
 			//img can't be loaded
 			$("img").one("error", function (e) {
-				$(this).addClass("error-img").attr("src", "./img/loading.svg");
+				$(this).addClass("error-img").attr("src", "./img/opacity.png");
 			});
 			//after initing doms
 			this.$nextTick(() => {
@@ -197,6 +198,7 @@ $(document).ready(function () {
 				for (let i = 0; i < lists.length; i ++) {
 					if (lists[i].getAttribute("href").indexOf(_m) !== -1) {
 						boo && lists[i].parentNode.removeChild(lists[i]);
+						this.changeCssRoot("--display", "block");
 						typeof CB === "function" && CB();
 						return;
 					}
@@ -209,9 +211,10 @@ $(document).ready(function () {
 					let check = setInterval(() => {
 						if (!!link.sheet && !!link.sheet.cssRules) {
 							clearInterval(check);
+							this.changeCssRoot("--display", "block");
 							typeof CB === "function" && CB();
 						}
-					}, 100);
+					}, 500);
 				}
 			},
 			changeCssRoot: function (property, v) {
@@ -221,22 +224,19 @@ $(document).ready(function () {
 				return {
 					heights: [0, this.vh],
 					callback: i => {
-						for (let j = 1; j <= 4; j ++) {
-							let _d = document.getElementById(`left-${j}`);
-							_d.style.animationDuration = "750ms";
-							_d.style.animationDirection = i === 0 ?
-								"normal" : "reverse";
-							_d.classList.remove("ani-slideup");
-							void _d.offsetWidth;
-							_d.classList.add("ani-slideup");
+						if (!this.disabledAni) {
+							this.disabledAni = !this.disabledAni;
+							for (let j = 1; j <= 4; j ++) {
+								let _d = document.getElementById(`left-${j}`);
+								_d.style.animationDuration = "750ms";
+								_d.style.animationDirection = i === 0 ?
+									"normal" : "reverse";
+								_d.classList.remove("ani-slideup");
+								void _d.offsetWidth;
+								_d.classList.add("ani-slideup");
+							}
+							setTimeout(() => this.disabledAni = false, 700);
 						}
-						let _r = document.getElementById("index-right");
-						_r.style.animationDuration = "750ms";
-						_r.style.animationDirection = i === 0 ?
-							"normal" : "reverse";
-						_r.classList.remove("ani-slidedown");
-						void _r.offsetWidth;
-						_r.classList.add("ani-slidedown");
 					}
 				};
 			},
