@@ -43,7 +43,9 @@ body {
     -webkit-flex-flow: column;
     -ms-flex-flow: column;
     flex-flow: column;
+    height: 100%;
     background-color: var(--lyrene-img-bg, #3d4650);
+    overflow-y: auto;
 }
 /* GROUP: header */
     .header {

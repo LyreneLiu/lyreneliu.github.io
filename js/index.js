@@ -4,67 +4,37 @@ $(document).ready(function () {
 //GROUP: scroll event
 	Vue.directive("scroll", {
 		inserted: function (el, binding) {
-			let target = null, dt = null, dist = null;
-			let last = el.scrollTop, top = el.scrollTop;
-			el.addEventListener("scroll", e => {
+			let last = el.scrollTop, now = el.scrollTop;
+			let sec = 0, selected = null, check;
+			let scrolling = () => {
 				let v = binding.value();
-				let divH = v.divHeights; top = el.scrollTop;
-				if (target !== null) { //when scrolling
-					let check = dt > 0 ?
-						(top > divH[target]) : (top < divH[target]);
-					if (top === divH[target] || check) {
-						el.scrollTo({ top: divH[target] });
-						last = divH[target];
-						target = null; dt = null; dist = null;
-					} else {
-						el.scrollTo({ top: top + dt * dist });
+				if (now < v.heights[1]) {
+					if (now - last > 0) {
+						el.scrollTo({
+							top: v.heights[1],
+							behavior: "smooth"
+						});
+						selected = 1;
+					} else if (now - last < 0) {
+						el.scrollTo({
+							top: v.heights[0],
+							behavior: "smooth"
+						});
+						selected = 0;
 					}
-				} else {
-					let _i = divH.findIndex(h => h === last);
-					if (_i !== -1) { //if reached the defined top or not
-						if (top - last > 0 && _i !== divH.length - 1) {
-							target = _i + 1; dt = 1;
-							dist = (divH[_i + 1] - top) / 20;
-							el.scrollTo({ top: top + dist });
-							typeof v.callback === "function"
-							&& v.callback(target);				
-						} else if (top - last < 0 && _i !== 0) {
-							target = _i - 1; dt = -1;
-							dist = (top - divH[_i - 1]) / 20;
-							el.scrollTo({ top: top - dist });
-							typeof v.callback === "function"
-							&& v.callback(target);
-						}
-					} else { //if in the defined top or not
-						if (top - last > 0) {
-							for (let i = 0; i < divH.length; i ++) {
-								if (i + 1 < divH.length) {
-									if (top < divH[i + 1] && top > divH[i]) {
-										target = i + 1; dt = 1;
-										dist = (divH[i + 1] - top) / 20;
-										el.scrollTo({ top: top + dist });
-										typeof v.callback === "function"
-										&& v.callback(target);				
-										break;		
-									}
-								}
-							}
-						} else if (top - last < 0) {
-							for (let i = 0; i < divH.length; i ++) {
-								if (i - 1 >= 0) {
-									if (top < divH[i] && top > divH[i - 1]) {
-										target = i - 1; dt = -1;
-										dist = (top - divH[i - 1]) / 20;
-										el.scrollTo({ top: top - dist });
-										typeof v.callback === "function"
-										&& v.callback(target);				
-										break;
-									}
-								}
-							}
-						}
+					last = now;	
+				}
+			};
+			el.addEventListener("scroll", e => {
+				now = el.scrollTop;
+				if (selected === null) { scrolling(); } else {
+					if (last === now) { selected = null; }
+					else {
+						e.timeStamp - sec < 50
+						&& clearTimeout(check);
+						sec = e.timeStamp;
+						check = setTimeout(scrolling, 80);
 					}
-					last = top <= 0 ? 0 : top;
 				}
 			});
 		}
@@ -85,7 +55,8 @@ $(document).ready(function () {
 				albumSeleted: 0,
 				albumChanging: null,
 				albumReload: null,
-				_swiper: null
+				_swiper: null,
+				vh: 0
 			};
 		},
 		mounted: function () {
@@ -133,6 +104,7 @@ $(document).ready(function () {
 			rwdWH: function (CB) {
 				let vh = window.innerHeight, vw = window.innerWidth;
 				this.setProperCss(vw > vh, () => {
+					this.vh = vh;
 					this.changeCssRoot("--vh", `${vh}px`);
 					this.changeCssRoot("--flex", "none");
 					setTimeout(() => {
@@ -242,12 +214,7 @@ $(document).ready(function () {
 			},
 			scrolling: function () {
 				return {
-					divHeights:  [
-						0, Number(
-							getComputedStyle(document.documentElement)
-								.getPropertyValue("--vh").replace("px", "")
-						)
-					],
+					heights: [0, this.vh],
 					callback: i => {
 						if (i === 0) {
 							for (let j = 1; j <= 4; j ++) {
@@ -265,8 +232,8 @@ $(document).ready(function () {
 				};
 			},
 			scrollAbout: function () {
-				let el = document.getElementById("index");
-				el.scrollTo({ top: el.scrollTop + 5 });
+				let dom = document.getElementById("index");
+				dom.scrollTo({ top: dom.scrollTop + 1 });
 			},
 			removeRightEvent: function () {
 				let right = document.getElementById("index-right");
