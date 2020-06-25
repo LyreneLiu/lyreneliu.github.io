@@ -8,6 +8,7 @@ $(document).ready(function () {
 			let sec = 0, selected = null, check;
 			let scrolling = () => {
 				let v = binding.value();
+				now = el.scrollTop;
 				if (now < v.heights[1]) {
 					if (now - last > 0) {
 						el.scrollTo({
@@ -30,10 +31,10 @@ $(document).ready(function () {
 				}
 			};
 			el.addEventListener("scroll", e => {
-				now = el.scrollTop;
 				if (selected === null) { scrolling(); } else {
-					if (last === now) { selected = null; }
-					else {
+					if (last === el.scrollTop) {
+						selected = null;
+					} else {
 						e.timeStamp - sec < 50
 						&& clearTimeout(check);
 						sec = e.timeStamp;
