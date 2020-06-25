@@ -4,45 +4,29 @@ $(document).ready(function () {
 //GROUP: scroll event
 	Vue.directive("scroll", {
 		inserted: function (el, binding) {
-			let last = el.scrollTop, now = el.scrollTop;
-			let sec = 0, selected = null, check, wait = false;
-			let scrolling = () => {
-				let v = binding.value();
-				now = el.scrollTop;
-				if (now < v.heights[1] && wait === false) {
-					if (now - last > 0) {
-						el.scrollTo({
-							top: v.heights[1],
-							behavior: "smooth"
-						});
-						selected = 1;
-						typeof v.callback === "function"
-						&& v.callback(selected);
-					} else if (now - last < 0) {
-						el.scrollTo({
-							top: v.heights[0],
-							behavior: "smooth"
-						});
-						selected = 0;
-						typeof v.callback === "function"
-						&& v.callback(selected);
-					}
-					last = now;
-				}
-			};
+			let last = el.scrollTop, wait = { o: false, h: false };
 			el.addEventListener("scroll", e => {
-				if (selected === null) { scrolling(); } else {
-					if (last === el.scrollTop) {
-						selected = null; clearTimeout(check);
-					} else if (el.scrollTop < 0) {
-						setTimeout(() => wait = false, 1500);
-					} else {
-						e.timeStamp - sec < 50
-						&& clearTimeout(check);
-						sec = e.timeStamp;
-						check = setTimeout(scrolling, 100);
-					}
+				let now = el.scrollTop;
+				let v = binding.value();
+				if (!wait.o && now < v.vh && now - last > 0) {
+					wait.o = true;
+					el.scrollTo({
+						top: v.vh, behavior: "smooth"
+					});
+					typeof v.callback === "function"
+					&& v.callback(1);
+					setTimeout(() => wait.o = false, 500);
+				} else if (!wait.h
+				&& now - last < 0 && now < v.vh - 50) {
+					wait.h = true;
+					el.scrollTo({
+						top: 0, behavior: "smooth"
+					});
+					typeof v.callback === "function"
+					&& v.callback(0);
+					setTimeout(() => wait.h = false, 500);
 				}
+				last = now;
 			});
 		}
 	});
@@ -64,7 +48,7 @@ $(document).ready(function () {
 				albumReload: null,
 				_swiper: null,
 				vh: 0,
-				disabledAni: false
+				disabledAni: { in: false, out: false }
 			};
 		},
 		mounted: function () {
@@ -224,10 +208,11 @@ $(document).ready(function () {
 			},
 			scrolling: function () {
 				return {
-					heights: [0, this.vh],
+					vh: this.vh,
 					callback: i => {
-						if (!this.disabledAni) {
-							this.disabledAni = !this.disabledAni;
+						let check = i === 0 ? "in" : "out";
+						if (!this.disabledAni[check]) {
+							this.disabledAni[check] = true;
 							for (let j = 1; j <= 4; j ++) {
 								let _d = document.getElementById(`left-${j}`);
 								_d.style.animationDuration = "750ms";
@@ -237,14 +222,16 @@ $(document).ready(function () {
 								void _d.offsetWidth;
 								_d.classList.add("ani-slideup");
 							}
-							setTimeout(() => this.disabledAni = false, 700);
+							setTimeout(() => {
+								this.disabledAni[check] = false;
+							}, 700);
 						}
 					}
 				};
 			},
 			scrollAbout: function () {
 				let dom = document.getElementById("index");
-				dom.scrollTo({ top: dom.scrollTop + 1 });
+				dom.scrollTo({ top: this.vh, behavior: "smooth" });
 			},
 			removeRightEvent: function () {
 				let right = document.getElementById("index-right");
