@@ -43,7 +43,7 @@ $(document).ready(function () {
 				albumReload: null,
 				_swiper: null,
 				vh: 0,
-				disabledAni: { in: false, out: false }
+				disabledAni: false
 			};
 		},
 		mounted: function () {
@@ -205,21 +205,16 @@ $(document).ready(function () {
 				return {
 					vh: this.vh,
 					callback: i => {
-						let check = i === 0 ? "in" : "out";
-						if (!this.disabledAni[check]) {
-							this.disabledAni[check] = true;
+						if (i === 0 && !this.disabledAni) {
+							this.disabledAni = true;
 							for (let j = 1; j <= 4; j ++) {
 								let _d = document.getElementById(`left-${j}`);
 								_d.style.animationDuration = "750ms";
-								_d.style.animationDirection = i === 0 ?
-									"normal" : "reverse";
 								_d.classList.remove("ani-slideup");
 								void _d.offsetWidth;
 								_d.classList.add("ani-slideup");
 							}
-							setTimeout(() => {
-								this.disabledAni[check] = false;
-							}, 700);
+							setTimeout(() => this.disabledAni = false, 700);
 						}
 					}
 				};
