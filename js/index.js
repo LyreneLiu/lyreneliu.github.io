@@ -11,17 +11,11 @@ $(document).ready(function () {
 				let v = binding.value();
 				if (!wait.o && now < v.vh && now - last > 0) {
 					wait.o = true;
-					el.scrollTo({
-						top: v.vh, behavior: "smooth"
-					});
 					typeof v.callback === "function"
 					&& v.callback(1);
 				} else if (!wait.h
 				&& now - last < 0 && now < v.vh - 50) {
 					wait.h = true;
-					el.scrollTo({
-						top: 0, behavior: "smooth"
-					});
 					typeof v.callback === "function"
 					&& v.callback(0);
 				} else if (wait.o && !t.o) {
