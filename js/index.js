@@ -15,14 +15,18 @@ $(document).ready(function () {
 							behavior: "smooth"
 						});
 						selected = 1;
+						typeof v.callback === "function"
+						&& v.callback(selected);
 					} else if (now - last < 0) {
 						el.scrollTo({
 							top: v.heights[0],
 							behavior: "smooth"
 						});
 						selected = 0;
+						typeof v.callback === "function"
+						&& v.callback(selected);
 					}
-					last = now;	
+					last = now;
 				}
 			};
 			el.addEventListener("scroll", e => {
@@ -216,18 +220,22 @@ $(document).ready(function () {
 				return {
 					heights: [0, this.vh],
 					callback: i => {
-						if (i === 0) {
-							for (let j = 1; j <= 4; j ++) {
-								let _d = document.getElementById(`left-${j}`);
-								_d.classList.remove("ani-slideup");
-								void _d.offsetWidth;
-								_d.classList.add("ani-slideup");
-							}
-							let _r = document.getElementById("index-right");
-							_r.classList.remove("ani-slidedown");
-							void _r.offsetWidth;
-							_r.classList.add("ani-slidedown");
+						for (let j = 1; j <= 4; j ++) {
+							let _d = document.getElementById(`left-${j}`);
+							_d.style.animationDuration = "750ms";
+							_d.style.animationDirection = i === 0 ?
+								"normal" : "reverse";
+							_d.classList.remove("ani-slideup");
+							void _d.offsetWidth;
+							_d.classList.add("ani-slideup");
 						}
+						let _r = document.getElementById("index-right");
+						_r.style.animationDuration = "750ms";
+						_r.style.animationDirection = i === 0 ?
+							"normal" : "reverse";
+						_r.classList.remove("ani-slidedown");
+						void _r.offsetWidth;
+						_r.classList.add("ani-slidedown");
 					}
 				};
 			},
