@@ -26,46 +26,50 @@ body {
     scroll-behavior: smooth;
     display: var(--display, "none");
 }
-.index-container,
-.about-container {
-    position: relative;
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: -ms-flexbox;
-    display: var(--flex, flex);
-    -webkit-flex-flow: row;
-    -ms-flex-flow: row;
-    flex-flow: row;
-    background-color: var(--lyrene-main-bg, #1e242b);
-    width: 100%;
-    height: var(--vh, 100vh); /* defined after calc */
-    overflow: hidden;
-}
-.about-container {
-    -webkit-flex-flow: column;
-    -ms-flex-flow: column;
-    flex-flow: column;
-    height: 100%;
-    background-color: var(--lyrene-img-bg, #3d4650);
-    overflow-y: auto;
-}
+/* GROUP: containers */
+    .index-container {
+        position: relative;
+        display: -webkit-box;
+        display: -webkit-flex;
+        display: -ms-flexbox;
+        display: var(--flex, flex);
+        -webkit-flex-flow: row;
+        -ms-flex-flow: row;
+        flex-flow: row;
+        background-color: var(--lyrene-main-bg, #1e242b);
+        width: 100%;
+        height: var(--vh, 100vh); /* defined after calc */
+        overflow: hidden;
+    }
+    .about-container {
+        padding: 60px 0;
+        background-color: var(--lyrene-img-bg, #3d4650);
+        width: 100%;
+        height: auto;
+    }
+    .footer-container {
+        padding: 2rem;
+        background-color: var(--lyrene-main-bg, #1e242b);
+        width: 100%;
+        color: white;
+    }
 /* GROUP: header */
     .header {
         position: fixed;
         z-index: 99;
         width: 100%;
-        height: 65px;
+        height: 60px;
         padding: var(--lyrene-mp, 10px);
         text-align: center;
         background-color: var(--lyrene-main-bg, #1e242b);
         opacity: .8;
         -webkit-transform: translateZ(0);
         transform: translateZ(0);
-        display: none; /* display on mobile | scrolling */
+        display: var(--header, "none"); /* display on mobile | scrolling */
     }
     .header>img {
         width: auto;
-        height: 45px;
+        height: 40px;
         filter: invert(1);
     }
 /* GROUP: left */
@@ -179,7 +183,7 @@ body {
     .main-btn-1::after {
         bottom: 0;
         left: 0;
-        border-color: transparent var(--lyrene-main-bg, #FF9FB2) transparent transparent;
+        border-color: transparent var(--lyrene-main-bg, #1e242b) transparent transparent;
         border-style: solid solid solid solid;
         border-width: 150px 250px 0 0;
         width: 250px;
@@ -187,7 +191,7 @@ body {
     .main-btn-2::after {
         top: 0;
         left: 0;
-        border-color: var(--lyrene-main-bg, #FF9FB2) transparent transparent transparent;
+        border-color: var(--lyrene-main-bg, #1e242b) transparent transparent transparent;
         border-style: solid solid solid solid;
         border-width: 150px 250px 0 0;
         width: 250px;
@@ -195,7 +199,7 @@ body {
     .main-btn-3::after {
         bottom: 0;
         left: 0;
-        border-color: transparent transparent var(--lyrene-main-bg, #FF9FB2) transparent;
+        border-color: transparent transparent var(--lyrene-main-bg, #1e242b) transparent;
         border-style: solid solid solid solid;
         border-width: 0 250px 150px 0;
         width: 250px;
@@ -203,7 +207,7 @@ body {
     .main-btn-4::after {
         top: 0;
         left: 0;
-        border-color: transparent var(--lyrene-main-bg, #FF9FB2) transparent transparent;
+        border-color: transparent var(--lyrene-main-bg, #1e242b) transparent transparent;
         border-style: solid solid solid solid;
         border-width: 0 250px 150px 0;
         width: 250px;
@@ -251,7 +255,7 @@ body {
         display: flex;
         align-items: center;
         justify-content: center;
-        background-color: var(--lyrene-img-bg);
+        background-color: var(--lyrene-img-bg, #3d4650);
         background-image: url("../img/loading.svg");
         background-size: 50px 50px;
         background-position: center;
@@ -269,7 +273,7 @@ body {
         left: 5px;
         width: calc(100% - 10px);
         height: calc(100% - 10px);
-        border: solid 3px var(--lyrene-main-bg);
+        border: solid 3px var(--lyrene-main-bg, #1e242b);
     }
     .swiper-container>img {
         position: absolute;
@@ -304,6 +308,144 @@ body {
         background-repeat: repeat;
         box-shadow: inset 0 0 0 2px white;
     }
+/* GROUP: about */
+    .about-title {
+        width: 100%;
+        margin: 2rem 0;
+        text-align: center;
+        color: var(--lyrene-dot-1, #FF9FB2);
+    }
+    .about-title .tw {
+        font-weight: bold;
+        letter-spacing: 10px;
+    }
+    .about-title .en {
+        letter-spacing: 5px;
+    }
+    .about-title .line {
+        background-image: linear-gradient(-45deg, white 25%, transparent 25%, transparent 50%, white 50%, white 75%, transparent 75%, transparent);
+        background-size: 5px 5px;
+        background-repeat: repeat;
+        margin: 1rem auto 0 auto;
+        width: 50px;
+        height: 5px;
+    }
+    .about-box-main {
+        display: -webkit-box;
+        display: -webkit-flex;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-flex-flow: row;
+        -ms-flex-flow: row;
+        flex-flow: row;
+        justify-content: center;
+        margin: 0 2rem;
+        padding: 2rem;
+        color: white;
+    }
+    .head-shot {
+        -webkit-box-flex: none;
+        flex: none;
+        border-radius: 300px;
+        background-image: url("../img/headshot.JPG");
+        background-position: 50% 50%;
+        background-size: 300px auto;
+        width: 300px;
+        height: 300px;
+    }
+    .profile {
+        display: -webkit-box;
+        display: -webkit-flex;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-flex-flow: column;
+        -ms-flex-flow: column;
+        flex-flow: column;
+        align-items: center;
+        align-self: center;
+        padding-left: 60px;
+        height: fit-content;
+    }
+    .profile-name {
+        margin-bottom: 1rem;
+        width: 100%;
+        max-width: 550px;
+        color: var(--lyrene-dot-1, #FF9FB2);
+        font-size: 1.5rem;
+        font-weight: bold;
+        letter-spacing: 3px;
+    }
+    .profile-group {
+        display: -webkit-box;
+        display: -webkit-flex;
+        display: -ms-flexbox;
+        display: flex;
+        margin: calc(var(--lyrene-mp, 10px) / 2) 0;
+        width: 100%;
+        max-width: 550px;
+    }
+    .profile-title {
+        position: relative;
+        -webkit-box-flex: none;
+        flex: none;
+        padding-right: calc(var(--lyrene-mp, 10px) * 2);
+        width: 100px;
+        text-align: right;
+        vertical-align: top;
+        letter-spacing: 2px;
+        filter: drop-shadow(0 0 2px white);
+    }
+    .profile-title::after {
+        content: "";
+        position: absolute;
+        top: calc(var(--lyrene-mp, 10px) / 2);
+        right: 0;
+        background-color: white;
+        width: 2px;
+        height: calc(100% - var(--lyrene-mp, 10px));
+    }
+    .profile-sub, .profile-txt {
+        -webkit-box-flex: 1;
+        flex: 1;
+        padding-left: calc(var(--lyrene-mp, 10px) * 2);
+        text-align: left;
+        font-weight: bold;
+        letter-spacing: 2px;
+    }
+    .profile-txt {
+        font-weight: normal;
+    }
+    .about-box {
+        position: relative;
+        z-index: 0;
+        margin: 0 2rem;
+        padding: 2rem;
+        background-color: var(--lyrene-main-bg, #1e242b);
+        height: auto;
+        color: white;
+        transition: all 300ms;
+    }
+    .about-box::after {
+        content: "";
+        position: absolute;
+        z-index: 0;
+        top: 5px;
+        left: 5px;
+        width: calc(100% - 10px);
+        height: calc(100% - 10px);
+        border: solid 3px var(--lyrene-ing-bg, #3d4650);
+    }
+    .about-box:hover, .about-box:active {
+        box-shadow: 0 0 5px var(--lyrene-main-bg, #1e242b);
+    }
+/* GROUP: footer */
+.copyright {
+    padding: var(--lyrene-mp, 10px) 0;
+    border-top: solid 1px white;
+    width: 100%;
+    font-size: .8rem;
+    text-align: center;
+}
 /* GROUP: others */
     .swiper-container .error-img {
         width: 50px;

@@ -2,10 +2,7 @@
     -webkit-flex-flow: column-reverse;
     -ms-flex-flow: column-reverse;
     flex-flow: column-reverse;
-    padding-top: 65px;
-}
-.about-container {
-    padding-top: 65px;
+    padding-top: 60px;
 }
 .header {
     display: block;
@@ -103,7 +100,6 @@
 }
 .index-img-page-dot {
     z-index: 10;
-    -webkit-box-orient: horizontal;
     -webkit-flex-flow: row;
     -ms-flex-flow: row;
     flex-flow: row;
@@ -117,7 +113,27 @@
     top: 0;
     left: 0;
 }
-
+.about-box-main {
+    -webkit-flex-flow: column;
+    -ms-flex-flow: column;
+    flex-flow: column;
+    padding: 0;
+}
+.head-shot {
+    margin: 0 auto;
+    border-radius: 1000px;
+    background-image: url("../img/headshot.JPG");
+    background-position: 50% 50%;
+    background-size: 100% auto;
+    max-width: 100%;
+}
+.profile {
+    padding-left: 0;
+    padding-bottom: 1rem;
+}
+.profile-name {
+    margin-top: 1rem;
+}
 @media screen and (min-width: 601px) {
     .index-left .left-child {
         font-size: 4vw;

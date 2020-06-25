@@ -4,11 +4,12 @@ $(document).ready(function () {
 //GROUP: scroll event
 	Vue.directive("scroll", {
 		inserted: function (el, binding) {
-			let last = el.scrollTop, t = { o: null, h: null };
+			let last = el.scrollTop;
 			let wait = { o: false, h: false };
 			el.addEventListener("scroll", e => {
-				let now = el.scrollTop;
 				let v = binding.value();
+				let now = el.scrollTop, _t = now < v.vh;
+				typeof v.header === "function" && v.header(_t);
 				if (!wait.o && now < v.vh && now - last > 0) {
 					wait.o = true;
 					typeof v.callback === "function"
@@ -43,10 +44,13 @@ $(document).ready(function () {
 				albumReload: null,
 				_swiper: null,
 				vh: 0,
-				disabledAni: false
+				disabledAni: false,
+				seniority: null,
+				copyrightYear: null
 			};
 		},
 		mounted: function () {
+			this.getSeniority(); this.getCopyright();
 			this._swiper = () => {
 				this.INITswiper(); this.albumSeleted += 1;
 				this.setSwiperTimer(); this.removeRightEvent();
@@ -77,6 +81,7 @@ $(document).ready(function () {
 			//after initing doms
 			this.$nextTick(() => {
 				this.rwdWH(() => {
+					this.changeCssRoot("--header", "none");
 					let l = this.album.length + 1;
 					$(".swiper-container").append(
 						$("#album-1").clone(true).attr("id", `album-${l}`)
@@ -173,6 +178,21 @@ $(document).ready(function () {
 				}
 			},
 		//GROUP: others
+			getSeniority: function () {
+				let today = new Date();
+				let year = (today.getFullYear() - 2019) * 12;
+				let month = today.getMonth() - 10;
+				let realY = (year + month) / 12 < 1 ? ""
+				: ((year + month) / 12 + " 年");
+				let realM = (year + month) % 12 === 0 ? ""
+				: ((year + month) % 12 + " 個月");
+				this.seniority = realY + (!!realM ? " " : "") + realM;
+	
+			},
+			getCopyright: function () {
+				let year = new Date().getFullYear();
+				this.copyrightYear = year === 2020 ? "" : `-${year}`;
+			},
 			setProperCss: function (boo, CB) {
 				let lists = document.getElementsByTagName("link");
 				let _m = "index-mobile.css";
@@ -204,7 +224,7 @@ $(document).ready(function () {
 			scrolling: function () {
 				return {
 					vh: this.vh,
-					callback: i => {
+					callback: (i, top) => {
 						if (i === 0 && !this.disabledAni) {
 							this.disabledAni = true;
 							for (let j = 1; j <= 4; j ++) {
@@ -216,6 +236,10 @@ $(document).ready(function () {
 							}
 							setTimeout(() => this.disabledAni = false, 700);
 						}
+					},
+					header: v => {
+						v ? this.changeCssRoot("--header", "none")
+						: this.changeCssRoot("--header", "block");
 					}
 				};
 			},
