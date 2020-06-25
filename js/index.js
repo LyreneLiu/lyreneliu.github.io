@@ -33,9 +33,9 @@ $(document).ready(function () {
 			el.addEventListener("scroll", e => {
 				if (selected === null) { scrolling(); } else {
 					if (last === el.scrollTop) {
-						selected = null; wait = true;
-						clearTimeout(check);
-						setTimeout(() => wait = false, 500);
+						selected = null; clearTimeout(check);
+					} else if (el.scrollTop < 0) {
+						setTimeout(() => wait = false, 1500);
 					} else {
 						e.timeStamp - sec < 50
 						&& clearTimeout(check);
