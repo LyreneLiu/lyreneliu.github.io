@@ -1,7 +1,74 @@
 "use strict";
 
 $(document).ready(function () {
-
+//GROUP: scroll event
+	Vue.directive("scroll", {
+		inserted: function (el, binding) {
+			let target = null, dt = null, dist = null;
+			let last = el.scrollTop, top = el.scrollTop;
+			el.addEventListener("scroll", e => {
+				let v = binding.value();
+				let divH = v.divHeights; top = el.scrollTop;
+				if (target !== null) { //when scrolling
+					let check = dt > 0 ?
+						(top > divH[target]) : (top < divH[target]);
+					if (top === divH[target] || check) {
+						el.scrollTo({ top: divH[target] });
+						last = divH[target];
+						target = null; dt = null; dist = null;
+					} else {
+						el.scrollTo({ top: top + dt * dist });
+					}
+				} else {
+					let _i = divH.findIndex(h => h === last);
+					if (_i !== -1) { //if reached the defined top or not
+						if (top - last > 0 && _i !== divH.length - 1) {
+							target = _i + 1; dt = 1;
+							dist = (divH[_i + 1] - top) / 20;
+							el.scrollTo({ top: top + dist });
+							typeof v.callback === "function"
+							&& v.callback(target);				
+						} else if (top - last < 0 && _i !== 0) {
+							target = _i - 1; dt = -1;
+							dist = (top - divH[_i - 1]) / 20;
+							el.scrollTo({ top: top - dist });
+							typeof v.callback === "function"
+							&& v.callback(target);
+						}
+					} else { //if in the defined top or not
+						if (top - last > 0) {
+							for (let i = 0; i < divH.length; i ++) {
+								if (i + 1 < divH.length) {
+									if (top < divH[i + 1] && top > divH[i]) {
+										target = i + 1; dt = 1;
+										dist = (divH[i + 1] - top) / 20;
+										el.scrollTo({ top: top + dist });
+										typeof v.callback === "function"
+										&& v.callback(target);				
+										break;		
+									}
+								}
+							}
+						} else if (top - last < 0) {
+							for (let i = 0; i < divH.length; i ++) {
+								if (i - 1 >= 0) {
+									if (top < divH[i] && top > divH[i - 1]) {
+										target = i - 1; dt = -1;
+										dist = (top - divH[i - 1]) / 20;
+										el.scrollTo({ top: top - dist });
+										typeof v.callback === "function"
+										&& v.callback(target);				
+										break;
+									}
+								}
+							}
+						}
+					}
+					last = top <= 0 ? 0 : top;
+				}
+			});
+		}
+	});
 	var vm = new Vue({
 		el: "#index",
 		data: function () {
@@ -17,10 +84,15 @@ $(document).ready(function () {
 				albumDirect: "Y",
 				albumSeleted: 0,
 				albumChanging: null,
-				albumReload: null
+				albumReload: null,
+				_swiper: null
 			};
 		},
 		mounted: function () {
+			this._swiper = () => {
+				this.INITswiper(); this.albumSeleted += 1;
+				this.setSwiperTimer(); this.removeRightEvent();
+			};
 			//prevent mobile user resizing the web
 			let lastTouchEnd = 0;
 			document.addEventListener("touchstart", event => {
@@ -51,7 +123,7 @@ $(document).ready(function () {
 					$(".swiper-container").append(
 						$("#album-1").clone(true).attr("id", `album-${l}`)
 					);
-					this.INITswiper(); this.slideLeft();
+					this.slideLeft();
 				});
 			});
 		},
@@ -59,45 +131,34 @@ $(document).ready(function () {
 		methods: {
 			//RWD height
 			rwdWH: function (CB) {
-				let vh = window.innerHeight;
-				this.changeCssRoot("--vh", `${vh}px`);
-				this.changeCssRoot("--flex", "none");
-				setTimeout(() => {
-					this.changeCssRoot("--flex", "flex");
-					typeof CB === "function" && CB();
-				}, 0);
+				let vh = window.innerHeight, vw = window.innerWidth;
+				this.setProperCss(vw > vh, () => {
+					this.changeCssRoot("--vh", `${vh}px`);
+					this.changeCssRoot("--flex", "none");
+					setTimeout(() => {
+						this.changeCssRoot("--flex", "flex");
+						typeof CB === "function" && CB();
+					}, 0);	
+				});
 			},
 		//GROUP: animation
 			slideLeft: function () {
-				let i = 1, j = 1;
+				let i = 1;
 				let child = document.getElementById(`left-${i}`);
-				child.style.transform = `translate${this.albumDirect}(0)`;
-				setTimeout(() => this.changeCssRoot(`--opacity-${j}`, ".6"), 500);
+				child.style.animationPlayState = "running";
 				let left = setInterval(() => {
 					i += 1;
 					let _child = document.getElementById(`left-${i}`);
 					if (_child) {
-						_child.style.transform = `translate${this.albumDirect}(0)`;
-						setTimeout(() => {
-							j += 1; this.changeCssRoot(`--opacity-${j}`, ".6");
-						}, 500);
-					} else {
-						this.changeCssRoot("--hover", "300ms");
-						clearInterval(left); this.slideRight();
+						_child.style.animationPlayState = "running";
 					}
+					else { clearInterval(left); this.slideRight(); }
 				}, 500);
 			},
 			slideRight: function () {
-				setTimeout(() => {
-					let right = document.getElementById("index-right");
-					right.style.transform = `translate${this.albumDirect}(0)`;
-					setTimeout(() => {
-						right.style.opacity = "1";
-						setTimeout(() => {
-							this.albumSeleted += 1; this.setSwiperTimer();
-						}, 500);
-					}, 500);
-				}, 500);
+				let right = document.getElementById("index-right");
+				right.style.animationPlayState = "running";
+				right.addEventListener("animationend", this._swiper);
 			},
 		//GROUP: swiper
 			INITswiper: function () {
@@ -107,7 +168,7 @@ $(document).ready(function () {
 				this.albumDirect = _w > _h ? "X" : "Y";
 				let l = this.album.length;
 				for (let i = 1; i < l + 1; i ++) {
-					this.moveSwiper(i + 1, this.albumCalc * i, true);
+					this.moveSwiper(i + 1, this.albumCalc * i, false);
 				}
 			},
 			setSwiperTimer: function () {
@@ -130,7 +191,7 @@ $(document).ready(function () {
 								let _reduce = (j - 1) * this.albumCalc;
 								this.moveSwiper(j, _reduce, false);
 								}		
-						}, 3500);
+						}, 2000);
 					}
 				}	
 			},
@@ -153,8 +214,63 @@ $(document).ready(function () {
 				}
 			},
 		//GROUP: others
+			setProperCss: function (boo, CB) {
+				let lists = document.getElementsByTagName("link");
+				let _m = "index-mobile.css";
+				for (let i = 0; i < lists.length; i ++) {
+					if (lists[i].getAttribute("href").indexOf(_m) !== -1) {
+						boo && lists[i].parentNode.removeChild(lists[i]);
+						typeof CB === "function" && CB();
+						return;
+					}
+				}
+				if (boo) { typeof CB === "function" && CB(); } else {
+					let link = document.createElement("link");
+					link.rel = "stylesheet"; link.type = "text/css";
+					link.href = `./css/${_m}`;
+					document.getElementsByTagName("head")[0].appendChild(link);
+					let check = setInterval(() => {
+						if (!!link.sheet && !!link.sheet.cssRules) {
+							clearInterval(check);
+							typeof CB === "function" && CB();
+						}
+					}, 100);
+				}
+			},
 			changeCssRoot: function (property, v) {
 				document.documentElement.style.setProperty(property, v);
+			},
+			scrolling: function () {
+				return {
+					divHeights:  [
+						0, Number(
+							getComputedStyle(document.documentElement)
+								.getPropertyValue("--vh").replace("px", "")
+						)
+					],
+					callback: i => {
+						if (i === 0) {
+							for (let j = 1; j <= 4; j ++) {
+								let _d = document.getElementById(`left-${j}`);
+								_d.classList.remove("ani-slideup");
+								void _d.offsetWidth;
+								_d.classList.add("ani-slideup");
+							}
+							let _r = document.getElementById("index-right");
+							_r.classList.remove("ani-slidedown");
+							void _r.offsetWidth;
+							_r.classList.add("ani-slidedown");
+						}
+					}
+				};
+			},
+			scrollAbout: function () {
+				let el = document.getElementById("index");
+				el.scrollTo({ top: el.scrollTop + 5 });
+			},
+			removeRightEvent: function () {
+				let right = document.getElementById("index-right");
+				right.removeEventListener("animationend", this._swiper);
 			}
 		}
 	});

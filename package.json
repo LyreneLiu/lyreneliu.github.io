@@ -1,7 +1,7 @@
 {
   "name": "lyrenesmurmur",
-  "version": "1.0.8",
-  "description": "[FEAT] Safari icons",
+  "version": "1.0.9",
+  "description": "[FEAT] scrolling",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

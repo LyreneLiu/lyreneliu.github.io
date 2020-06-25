@@ -8,13 +8,13 @@
 		<meta name="description" content="Hi! I'm Lyrene, a frontend engineer which feels high enthusiasm and interested in coding." />
 		<!-- icon -->
 		<link rel="Shortcut Icon" type="image/x-icon" href="./img/icon.ico" />
-		<link rel="icon" type="image/png" sizes="16x16" href="./img/icon-16.png">
-		<link rel="icon" type="image/png" sizes="32x32" href="./img/icon-32.png">
-		<link rel="icon" type="image/png" sizes="96x96" href="./img/icon-96.png">
-		<link rel="apple-touch-icon" href="./img/icon-16.png">
-		<link rel="apple-touch-icon" sizes="76x76" href="./img/icon-76.png">
-		<link rel="apple-touch-icon" sizes="120x120" href="./img/icon-120.png">
-		<link rel="apple-touch-icon" sizes="152x152" href="./img/icon-152.png">
+		<link rel="icon" type="image/png" sizes="16x16" href="./img/icon-16.png" />
+		<link rel="icon" type="image/png" sizes="32x32" href="./img/icon-32.png" />
+		<link rel="icon" type="image/png" sizes="96x96" href="./img/icon-96.png" />
+		<link rel="apple-touch-icon" href="./img/icon-16.png" />
+		<link rel="apple-touch-icon" sizes="76x76" href="./img/icon-76.png" />
+		<link rel="apple-touch-icon" sizes="120x120" href="./img/icon-120.png" />
+		<link rel="apple-touch-icon" sizes="152x152" href="./img/icon-152.png" />
 		<!-- settings -->
 		<meta itemprop="name" content="Lyrene's Murmur" />
 		<meta itemprop="image" content="./img/album-1.JPG" />
@@ -30,27 +30,29 @@
 		<!-- css -->
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous" />
 		<link rel="stylesheet" href="./css/index.css">
+		<link rel="stylesheet" href="./css/keyframes.css">
 		<title>Lyrene's Murmur</title>
 	</head>
 	<body>
-		<div id="index">
+		<div id="index" v-scroll="scrolling">
 			<div class="header"><img src="./img/title.png"></div>
+			<!-- index -->
             <div class="index-container">
                 <div class="index-left">
-					<div id="left-1" class="left-child main-btn-1">
+					<div id="left-1" class="left-child main-btn-1 ani-slideup" @click="scrollAbout">
 						<div class="btn-t-en">ABOUT LYRENE</div><div>關於我</div>
 					</div>
-					<div id="left-2" class="left-child main-btn-2">
+					<div id="left-2" class="left-child main-btn-2 ani-slideup">
 						<div class="btn-t-en">WORKS</div><div>作品集</div>
 					</div>
-					<div id="left-3" class="left-child main-btn-3">
+					<div id="left-3" class="left-child main-btn-3 ani-slideup">
 						<div class="btn-t-en">FRONTEND MEMO</div><div>前端那些毛</div>
 					</div>
-					<div id="left-4" class="left-child main-btn-4">
+					<div id="left-4" class="left-child main-btn-4 ani-slideup">
 						<div class="btn-t-en">DAILY</div><div>日常瑣事</div>
 					</div>
 				</div>
-                <div id="index-right" class="index-right">
+                <div id="index-right" class="index-right ani-slidedown">
                     <div class="title-container"><img src="./img/title.png"></div>
 					<div id="swiper-container" class="swiper-container">
 						<img v-for="(pic,index) in album" :src="'img/'+pic.name" :id="'album-'+(index+1)" :title="pic.text">
@@ -62,7 +64,10 @@
 						:class="{'page-dot-chosen':albumSeleted===index+1}" @click="toSwiper(index)">
 					</div>
 				</div>
-            </div>
+			</div>
+			<!-- about -->
+			<div class="about-container"></div>
+
 		</div>
 
 		<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>

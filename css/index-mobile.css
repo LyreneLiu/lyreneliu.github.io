@@ -1,0 +1,128 @@
+.index-container {
+    -webkit-flex-flow: column-reverse;
+    -ms-flex-flow: column-reverse;
+    flex-flow: column-reverse;
+    padding-top: 65px;
+}
+.about-container {
+    padding-top: 65px;
+}
+.header {
+    display: block;
+}
+.index-left {
+    padding: calc(var(--lyrene-mp, 10px) / 2) 0;
+    flex-flow: column;
+}
+.index-left .left-child {
+    margin: calc(var(--lyrene-mp, 10px) / 2) 0;
+    width: 85%;
+    max-width: none;
+    height: auto;
+    max-height: 100px;
+    font-size: 5vw;
+    -webkit-writing-mode: inherit;
+    writing-mode: inherit;
+}
+.index-left .left-child:nth-child(odd) {
+    align-items: center;
+    text-align: center;
+    transform: translateY(100vh);
+}
+.index-left .left-child:nth-child(even) {
+    align-items: center;
+    text-align: center;
+    transform: translateY(100vh);
+}
+.index-left .left-child:active {
+    width: 100%;
+    height: auto;
+}
+.main-btn-1::after {
+    bottom: 0;
+    right: 0;
+    left: auto;
+    border-color: transparent var(--lyrene-main-bg, #FF9FB2) transparent transparent;
+    border-style: solid solid solid solid;
+    border-width: 100px 50px 0 0;
+    width: 50px;
+}
+.main-btn-2::after {
+    bottom: 0;
+    left: 0;
+    right: auto;
+    border-color: var(--lyrene-main-bg, #FF9FB2) transparent transparent transparent;
+    border-style: solid solid solid solid;
+    border-width: 100px 50px 0 0;
+    width: 50px;
+}
+.main-btn-3::after {
+    bottom: 0;
+    right: 0;
+    left: auto;
+    border-color: transparent var(--lyrene-main-bg, #FF9FB2) transparent transparent;
+    border-style: solid solid solid solid;
+    border-width: 0 50px 100px 0;
+    width: 50px;
+}
+.main-btn-4::after {
+    bottom: 0;
+    left: 0;
+    right: auto;
+    border-color: transparent transparent var(--lyrene-main-bg, #FF9FB2) transparent;
+    border-style: solid solid solid solid;
+    border-width: 0 50px 100px 0;
+    width: 50px;
+}
+.left-child :nth-child(n) {
+    width: 100%;
+    height: auto;
+}
+.left-child:nth-child(odd) :nth-child(n) {
+    padding-top: 0;
+}
+.left-child:nth-child(even) :nth-child(n) {
+    padding-bottom: 0;
+}
+
+.left-child .btn-t-en {
+    font-size: 3vw;
+}
+.index-right {
+    -webkit-box-flex: .7;
+    flex: .7;
+    padding: 0;
+    width: 100%;
+}
+.swiper-container>img {
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: auto;
+}
+.index-img-page-dot {
+    z-index: 10;
+    -webkit-box-orient: horizontal;
+    -webkit-flex-flow: row;
+    -ms-flex-flow: row;
+    flex-flow: row;
+    width: 100%;
+    height: 10px;
+}
+.title-container {
+    display: none;
+}
+.swiper-container .error-img {
+    top: 0;
+    left: 0;
+}
+
+@media screen and (min-width: 601px) {
+    .index-left .left-child {
+        font-size: 4vw;
+    }
+    .left-child .btn-t-en {
+        font-size: 2vw;
+    }    
+}
