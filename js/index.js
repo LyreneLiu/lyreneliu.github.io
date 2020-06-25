@@ -4,7 +4,8 @@ $(document).ready(function () {
 //GROUP: scroll event
 	Vue.directive("scroll", {
 		inserted: function (el, binding) {
-			let last = el.scrollTop, wait = { o: false, h: false };
+			let last = el.scrollTop, t = { o: null, h: null };
+			let wait = { o: false, h: false };
 			el.addEventListener("scroll", e => {
 				let now = el.scrollTop;
 				let v = binding.value();
@@ -15,7 +16,6 @@ $(document).ready(function () {
 					});
 					typeof v.callback === "function"
 					&& v.callback(1);
-					setTimeout(() => wait.o = false, 1500);
 				} else if (!wait.h
 				&& now - last < 0 && now < v.vh - 50) {
 					wait.h = true;
@@ -24,7 +24,14 @@ $(document).ready(function () {
 					});
 					typeof v.callback === "function"
 					&& v.callback(0);
-					setTimeout(() => wait.h = false, 1500);
+				} else if (wait.o && !t.o) {
+					t.o = now === v.vh ?
+					  setTimeout(() => wait.o = false, 2000)
+					: setTimeout(() => wait.o = false, 1000);
+				} else if (wait.h && !t.h) {
+					t.h = now === 0 ?
+					  setTimeout(() => wait.h = false, 2000)
+					: setTimeout(() => wait.h = false, 1000);
 				}
 				last = now;
 			});
