@@ -5,11 +5,11 @@ $(document).ready(function () {
 	Vue.directive("scroll", {
 		inserted: function (el, binding) {
 			let last = el.scrollTop, now = el.scrollTop;
-			let sec = 0, selected = null, check;
+			let sec = 0, selected = null, check, wait = false;
 			let scrolling = () => {
 				let v = binding.value();
 				now = el.scrollTop;
-				if (now < v.heights[1]) {
+				if (now < v.heights[1] && wait === false) {
 					if (now - last > 0) {
 						el.scrollTo({
 							top: v.heights[1],
@@ -33,12 +33,14 @@ $(document).ready(function () {
 			el.addEventListener("scroll", e => {
 				if (selected === null) { scrolling(); } else {
 					if (last === el.scrollTop) {
-						selected = null; clearTimeout(check);
+						selected = null; wait = true;
+						clearTimeout(check);
+						setTimeout(() => wait = false, 500);
 					} else {
 						e.timeStamp - sec < 50
 						&& clearTimeout(check);
 						sec = e.timeStamp;
-						check = setTimeout(scrolling, 80);
+						check = setTimeout(scrolling, 100);
 					}
 				}
 			});
