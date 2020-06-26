@@ -8,6 +8,13 @@
     --lyrene-dot-5: #68676f;
     --lyrene-mp: 10px;
 }
+:root {
+    --vh: 100vh;
+    --show-header: none;
+    --smooth-header: 0;
+    --hide-calc: flex;
+    --waiting: none;
+}
 html {
     position: fixed;
     top: 0;
@@ -24,7 +31,7 @@ body {
     height: 100%;
     overflow-y: auto;
     scroll-behavior: smooth;
-    display: var(--display, "none");
+    display: var(--show-index, "none");
 }
 /* GROUP: containers */
     .index-container {
@@ -32,7 +39,7 @@ body {
         display: -webkit-box;
         display: -webkit-flex;
         display: -ms-flexbox;
-        display: var(--flex, flex);
+        display: var(--hide-calc, flex);
         -webkit-flex-flow: row;
         -ms-flex-flow: row;
         flex-flow: row;
@@ -65,7 +72,8 @@ body {
         opacity: .8;
         -webkit-transform: translateZ(0);
         transform: translateZ(0);
-        display: var(--header, "none"); /* display on mobile | scrolling */
+        opacity: var(--smooth-header, 0);
+        transition: opacity 300ms;
     }
     .header>img {
         width: auto;
@@ -373,6 +381,7 @@ body {
         color: var(--lyrene-dot-1, #FF9FB2);
         font-size: 1.5rem;
         font-weight: bold;
+        text-align: center;
         letter-spacing: 3px;
     }
     .profile-group {
@@ -452,7 +461,10 @@ body {
         height: 50px;
         top: calc(50% - 25px);
     }
-
+    .waiting-to-show {
+        display: var(--waiting, "none");
+    }
+    
 @media screen and (min-width: 1201px) {
     .index-left .left-child {
         font-size: 2.5vw;

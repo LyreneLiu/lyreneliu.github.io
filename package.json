@@ -1,7 +1,7 @@
 {
   "name": "lyrenesmurmur",
-  "version": "1.0.15",
-  "description": "[FEAT] index: about Lyrene",
+  "version": "1.0.16",
+  "description": "[FIX] index: optimization",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

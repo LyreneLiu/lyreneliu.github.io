@@ -4,23 +4,16 @@ $(document).ready(function () {
 //GROUP: scroll event
 	Vue.directive("scroll", {
 		inserted: function (el, binding) {
-			let last = el.scrollTop;
-			let wait = { o: false, h: false };
+			let last = el.scrollTop, wait = false;
 			el.addEventListener("scroll", e => {
 				let v = binding.value();
 				let now = el.scrollTop, _t = now < v.vh;
 				typeof v.header === "function" && v.header(_t);
-				if (!wait.o && now < v.vh && now - last > 0) {
-					wait.o = true;
-					typeof v.callback === "function"
-					&& v.callback(1);
-					setTimeout(() => wait.o = false, 1500);
-				} else if (!wait.h
-				&& now - last < 0 && now < v.vh - 50) {
-					wait.h = true;
+				if (!wait && now - last < 0 && now <= v.vh / 2) {
+					wait = true;
 					typeof v.callback === "function"
 					&& v.callback(0);
-					setTimeout(() => wait.h = false, 1500);
+					setTimeout(() => wait = false, 1500);
 				}
 				last = now;
 			});
@@ -53,7 +46,8 @@ $(document).ready(function () {
 			this.getSeniority(); this.getCopyright();
 			this._swiper = () => {
 				this.INITswiper(); this.albumSeleted += 1;
-				this.setSwiperTimer(); this.removeRightEvent();
+				setTimeout(() => this.setSwiperTimer(), 4000);
+				this.removeRightEvent();
 			};
 			//prevent mobile user resizing the web
 			let lastTouchEnd = 0;
@@ -68,7 +62,7 @@ $(document).ready(function () {
 			//resize event (on computer web)
 			window.addEventListener("resize", () => {
 				this.rwdWH(() => {
-					clearInterval(this.albumChanging);
+					clearTimeout(this.albumChanging);
 					clearTimeout(this.albumReload);
 					this.INITswiper();
 					this.toSwiper(this.albumSeleted - 1);
@@ -81,12 +75,12 @@ $(document).ready(function () {
 			//after initing doms
 			this.$nextTick(() => {
 				this.rwdWH(() => {
-					this.changeCssRoot("--header", "none");
+					this.changeCssRoot("--smooth-header", "0");
 					let l = this.album.length + 1;
 					$(".swiper-container").append(
 						$("#album-1").clone(true).attr("id", `album-${l}`)
 					);
-					this.slideLeft();
+					this.sliding();
 				});
 			});
 		},
@@ -98,31 +92,31 @@ $(document).ready(function () {
 				this.setProperCss(vw > vh, () => {
 					this.vh = vh;
 					this.changeCssRoot("--vh", `${vh}px`);
-					this.changeCssRoot("--flex", "none");
+					this.changeCssRoot("--hide-calc", "none");
 					setTimeout(() => {
-						this.changeCssRoot("--flex", "flex");
+						this.changeCssRoot("--hide-calc", "flex");
 						typeof CB === "function" && CB();
-					}, 0);	
+					}, 0);
 				});
 			},
 		//GROUP: animation
-			slideLeft: function () {
-				let i = 1;
-				let child = document.getElementById(`left-${i}`);
-				child.style.animationPlayState = "running";
-				let left = setInterval(() => {
-					i += 1;
-					let _child = document.getElementById(`left-${i}`);
-					if (_child) {
-						_child.style.animationPlayState = "running";
+			sliding: async function () {
+				let i = 1; const delaySlide = t => {
+					return new Promise(resolve => setTimeout(resolve, t));
+				};
+				this.changeCssRoot("--waiting", "block");
+				while (i !== null) {
+					let child = document.getElementById(`left-${i}`);
+					if (child) {
+						child.style.animationPlayState = "running";
+						i += 1; await delaySlide(500);
+					} else {
+						i = null;
+						let right = document.getElementById("index-right");
+						right.style.animationPlayState = "running";
+						right.addEventListener("animationend", this._swiper);
 					}
-					else { clearInterval(left); this.slideRight(); }
-				}, 500);
-			},
-			slideRight: function () {
-				let right = document.getElementById("index-right");
-				right.style.animationPlayState = "running";
-				right.addEventListener("animationend", this._swiper);
+				}
 			},
 		//GROUP: swiper
 			INITswiper: function () {
@@ -135,12 +129,18 @@ $(document).ready(function () {
 					this.moveSwiper(i + 1, this.albumCalc * i, false);
 				}
 			},
-			setSwiperTimer: function () {
-				let l = this.album.length;
-				this.albumChanging = setInterval(() => {
-					this.albumSeleted += this.albumSeleted < l ? 1 : (-l + 1);
-					this.activeSwiper();
-				}, 4000);
+			setSwiperTimer: async function () {
+				let l = this.album.length; const swiping = t => {
+					return new Promise(resolve => {
+						this.albumChanging = setTimeout(resolve, t);
+					});
+				};
+				this.albumChanging = 4000;
+				while (!!this.albumChanging) {
+					this.albumSeleted
+					+= this.albumSeleted < l ? 1 : (-l + 1);
+					this.activeSwiper(); await swiping(4000);
+				}
 			},
 			activeSwiper: function () {
 				let l = this.album.length;
@@ -154,8 +154,8 @@ $(document).ready(function () {
 							for (let j = 1; j <= l + 1; j ++) {
 								let _reduce = (j - 1) * this.albumCalc;
 								this.moveSwiper(j, _reduce, false);
-								}		
-						}, 2000);
+								}
+						}, 500);
 					}
 				}	
 			},
@@ -166,7 +166,7 @@ $(document).ready(function () {
 			},
 			toSwiper: function (i) {
 				if (this.albumSeleted !== 0) {
-					clearInterval(this.albumChanging);
+					clearTimeout(this.albumChanging);
 					clearTimeout(this.albumReload);
 					let l = this.album.length;
 					this.albumSeleted = i + 1;
@@ -174,7 +174,7 @@ $(document).ready(function () {
 						let reduce = (j - i - 1) * this.albumCalc;
 						this.moveSwiper(j, reduce, true);
 					}
-					this.setSwiperTimer();
+					setTimeout(() => this.setSwiperTimer(), 4000);
 				}
 			},
 		//GROUP: others
@@ -199,7 +199,7 @@ $(document).ready(function () {
 				for (let i = 0; i < lists.length; i ++) {
 					if (lists[i].getAttribute("href").indexOf(_m) !== -1) {
 						boo && lists[i].parentNode.removeChild(lists[i]);
-						this.changeCssRoot("--display", "block");
+						this.changeCssRoot("--show-index", "block");
 						typeof CB === "function" && CB();
 						return;
 					}
@@ -212,7 +212,7 @@ $(document).ready(function () {
 					let check = setInterval(() => {
 						if (!!link.sheet && !!link.sheet.cssRules) {
 							clearInterval(check);
-							this.changeCssRoot("--display", "block");
+							this.changeCssRoot("--show-index", "block");
 							typeof CB === "function" && CB();
 						}
 					}, 500);
@@ -224,7 +224,7 @@ $(document).ready(function () {
 			scrolling: function () {
 				return {
 					vh: this.vh,
-					callback: (i, top) => {
+					callback: i => {
 						if (i === 0 && !this.disabledAni) {
 							this.disabledAni = true;
 							for (let j = 1; j <= 4; j ++) {
@@ -234,12 +234,11 @@ $(document).ready(function () {
 								void _d.offsetWidth;
 								_d.classList.add("ani-slideup");
 							}
-							setTimeout(() => this.disabledAni = false, 700);
+							setTimeout(() => this.disabledAni = false, 750);
 						}
 					},
 					header: v => {
-						v ? this.changeCssRoot("--header", "none")
-						: this.changeCssRoot("--header", "block");
+						this.changeCssRoot("--smooth-header", v ? "0" : "1");
 					}
 				};
 			},
