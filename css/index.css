@@ -69,7 +69,6 @@ body {
         padding: var(--lyrene-mp, 10px);
         text-align: center;
         background-color: var(--lyrene-main-bg, #1e242b);
-        opacity: .8;
         -webkit-transform: translateZ(0);
         transform: translateZ(0);
         opacity: var(--smooth-header, 0);

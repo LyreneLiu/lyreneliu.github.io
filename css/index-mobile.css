@@ -6,7 +6,7 @@
 }
 .header {
     display: block;
-    opacity: 1;
+    opacity: .8;
 }
 .index-left {
     padding: calc(var(--lyrene-mp, 10px) / 2) 0;

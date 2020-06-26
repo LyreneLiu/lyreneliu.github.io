@@ -238,7 +238,7 @@ $(document).ready(function () {
 						}
 					},
 					header: v => {
-						this.changeCssRoot("--smooth-header", v ? "0" : "1");
+						this.changeCssRoot("--smooth-header", v ? "0" : ".8");
 					}
 				};
 			},
