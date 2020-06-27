@@ -88,7 +88,7 @@ $(document).ready(function () {
 			//scroll
 			setScroll: function () {
 				this.scroll = new BScroll("#index", {
-					bindToWrapper: true, preventDefault: false,
+					bindToWrapper: true,
 					disableMouse: false, disableTouch: false,
 					mouseWheel: true, probeType: 3,
 					scrollbar: { fade: true, interactive: true }
