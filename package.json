@@ -1,7 +1,7 @@
 {
   "name": "lyrenesmurmur",
-  "version": "1.0.17",
-  "description": "[FIX] index: swiper bugs",
+  "version": "1.0.0",
+  "description": "locale dependencies",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

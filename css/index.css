@@ -30,7 +30,6 @@ body {
 #index {
     height: 100%;
     overflow-y: auto;
-    scroll-behavior: smooth;
     display: var(--show-index, "none");
 }
 /* GROUP: containers */
@@ -323,10 +322,12 @@ body {
         color: var(--lyrene-dot-1, #FF9FB2);
     }
     .about-title .tw {
+        padding-left: 10px;
         font-weight: bold;
         letter-spacing: 10px;
     }
     .about-title .en {
+        padding-left: 5px;
         letter-spacing: 5px;
     }
     .about-title .line {

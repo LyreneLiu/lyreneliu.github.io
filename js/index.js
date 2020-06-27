@@ -39,10 +39,12 @@ $(document).ready(function () {
 				vh: 0,
 				disabledAni: false,
 				seniority: null,
-				copyrightYear: null
+				copyrightYear: null,
+				version: null
 			};
 		},
 		mounted: function () {
+			this.getVersion();
 			this.getSeniority(); this.getCopyright();
 			this._swiper = () => {
 				this.INITswiper(); this.albumSeleted += 1;
@@ -185,6 +187,12 @@ $(document).ready(function () {
 			getCopyright: function () {
 				let year = new Date().getFullYear();
 				this.copyrightYear = year === 2020 ? "" : `-${year}`;
+			},
+			getVersion: function () {
+				let _verReq = $.ajax({
+					url:"./doc/config.json", dataType: "json"
+				}).done(res => this.version = res.version)
+				  .fail(err => this.version = "1.0.0");
 			},
 			setProperCss: function (boo, CB) {
 				let lists = document.getElementsByTagName("link");
