@@ -2,27 +2,11 @@
 
 $(document).ready(function () {
 //GROUP: scroll event
-	Vue.directive("scroll", {
-		inserted: function (el, binding) {
-			let last = el.scrollTop, wait = false;
-			el.addEventListener("scroll", e => {
-				let v = binding.value();
-				let now = el.scrollTop, _t = now < v.vh;
-				typeof v.header === "function" && v.header(_t);
-				if (!wait && now - last < 0 && now <= v.vh / 2) {
-					wait = true;
-					typeof v.callback === "function"
-					&& v.callback(0);
-					setTimeout(() => wait = false, 1500);
-				}
-				last = now;
-			});
-		}
-	});
 	var vm = new Vue({
 		el: "#index",
 		data: function () {
 			return {
+				scroll: null,
 				album: [
 					{ name: "album-1.JPG", text: "ME" },
 					{ name: "album-2.JPG", text: "OUTGOING" },
@@ -37,7 +21,6 @@ $(document).ready(function () {
 				albumReload: null,
 				_swiper: null,
 				vh: 0,
-				disabledAni: false,
 				seniority: null,
 				copyrightYear: null,
 				version: null
@@ -71,14 +54,16 @@ $(document).ready(function () {
 			});
 			//img can't be loaded
 			$("img").one("error", function (e) {
-				$(this).addClass("error-img").attr("src", "./img/opacity.png");
+				$(this)
+					.addClass("error-img")
+					.attr("src", "./img/opacity.png");
 			});
 			//after initing doms
 			this.$nextTick(() => {
-				this.rwdWH(() => {
+				this.setScroll(); this.rwdWH(() => {
 					this.changeCssRoot("--smooth-header", "0");
 					let l = this.album.length + 1;
-					$(".swiper-container").append(
+					$("#swiper").append(
 						$("#album-1").clone(true).attr("id", `album-${l}`)
 					);
 					this.sliding();
@@ -99,6 +84,45 @@ $(document).ready(function () {
 						typeof CB === "function" && CB();
 					}, 0);
 				});
+			},
+			//scroll
+			setScroll: function () {
+				this.scroll = new BScroll("#index", {
+					bindToWrapper: true, preventDefault: false,
+					disableMouse: false, disableTouch: false,
+					mouseWheel: true, probeType: 3,
+					scrollbar: { fade: true, interactive: true }
+				});
+				let panTo = e => {
+					let _y = e.y * -1;
+					if (_y < this.vh && _y !== 0) {
+						_y < this.vh / 2 ?
+							this.scroll.scrollTo(0, 0, 500)
+						:	this.scrollAbout();
+					}
+				};
+				let animate = e => {
+					let _y = e.y * -1;
+					if (_y <= this.vh / 2 && _y > this.vh / 4
+					&& this.scroll.movingDirectionY === -1) {
+						for (let i = 1; i <= 4; i ++) {
+							let _d
+							= document.getElementById(`left-${i}`);
+							_d.style.animationDirection = "normal";
+							_d.style.animationDuration = "750ms";
+							_d.classList.remove("ani-slideup");
+							void _d.offsetWidth;
+							_d.classList.add("ani-slideup");
+						}
+					}
+					this.changeCssRoot(
+						"--smooth-header",
+						_y < this.vh ? "0" : ".8"
+					);
+				};
+				this.scroll.on("touchEnd", panTo);
+				this.scroll.on("scrollEnd", panTo);
+				this.scroll.on("scroll", animate);
 			},
 		//GROUP: animation
 			sliding: async function () {
@@ -121,13 +145,17 @@ $(document).ready(function () {
 			},
 		//GROUP: swiper
 			INITswiper: function () {
-				let _w = $("#swiper-container").width(),
-					_h = $("#swiper-container").height();
+				let _w = $("#swiper").width(),
+					_h = $("#swiper").height();
 				this.albumCalc = _w > _h ? _w : _h;
 				this.albumDirect = _w > _h ? "X" : "Y";
 				let l = this.album.length;
-				for (let i = 1; i < l + 1; i ++) {
-					this.moveSwiper(i + 1, this.albumCalc * i, false);
+				for (let i = 1; i <= l + 1; i ++) {
+					$(`#album-${i}`).css(
+						"transform",
+						`translate${this.albumDirect}`
+						+ `(${(i - 1) * this.albumCalc}px)`
+					);
 				}
 			},
 			setSwiperTimer: function () {
@@ -139,25 +167,20 @@ $(document).ready(function () {
 			},
 			activeSwiper: function () {
 				let l = this.album.length;
-				let _selected = this.albumSeleted === 1 ?
+				let selected = this.albumSeleted === 1 ?
 					(l + 1) : this.albumSeleted;
-				for (let i = 1; i <= l + 1; i ++) {
-					let reduce = (i - _selected) * this.albumCalc;
-					this.moveSwiper(i, reduce, true);
-					if (this.albumSeleted === 1 && i === _selected) {
-						this.albumReload = setTimeout(() => {
-							for (let j = 1; j <= l + 1; j ++) {
-								let _reduce = (j - 1) * this.albumCalc;
-								this.moveSwiper(j, _reduce, false);
-								}
-						}, 500);
-					}
-				}	
+				this.moveSwiper(selected, true);
+				(this.albumSeleted === 1) && (this.albumReload
+				= setTimeout(() => this.moveSwiper(1, false), 500));
 			},
-			moveSwiper: function (index, re, ani) {
-				$("#album-" + index)
+			moveSwiper: function (index, ani) {
+				$("#swiper")
 					.css("transition", ani ? "all 300ms" : "none")
-					.css("transform", `translate${this.albumDirect}(${re}px)`);
+					.css(
+						"transform",
+						`translate${this.albumDirect}`
+						+ `(${(index - 1) * this.albumCalc * -1}px)`
+					);
 			},
 			toSwiper: function (i) {
 				if (this.albumSeleted !== 0) {
@@ -165,10 +188,7 @@ $(document).ready(function () {
 					clearTimeout(this.albumReload);
 					let l = this.album.length;
 					this.albumSeleted = i + 1;
-					for (let j = 1; j < l + 1; j ++) {
-						let reduce = (j - i - 1) * this.albumCalc;
-						this.moveSwiper(j, reduce, true);
-					}
+					this.moveSwiper(this.albumSeleted, true);
 					this.setSwiperTimer();
 				}
 			},
@@ -222,30 +242,8 @@ $(document).ready(function () {
 			changeCssRoot: function (property, v) {
 				document.documentElement.style.setProperty(property, v);
 			},
-			scrolling: function () {
-				return {
-					vh: this.vh,
-					callback: i => {
-						if (i === 0 && !this.disabledAni) {
-							this.disabledAni = true;
-							for (let j = 1; j <= 4; j ++) {
-								let _d = document.getElementById(`left-${j}`);
-								_d.style.animationDuration = "750ms";
-								_d.classList.remove("ani-slideup");
-								void _d.offsetWidth;
-								_d.classList.add("ani-slideup");
-							}
-							setTimeout(() => this.disabledAni = false, 750);
-						}
-					},
-					header: v => {
-						this.changeCssRoot("--smooth-header", v ? "0" : ".8");
-					}
-				};
-			},
 			scrollAbout: function () {
-				let dom = document.getElementById("index");
-				dom.scrollTo({ top: this.vh, behavior: "smooth" });
+				this.scroll.scrollToElement(".about-container", 500);
 			},
 			removeRightEvent: function () {
 				let right = document.getElementById("index-right");

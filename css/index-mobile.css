@@ -92,7 +92,7 @@
     padding: 0;
     width: 100%;
 }
-.swiper-container>img {
+.swiper-inside>img {
     left: 0;
     right: 0;
     bottom: 0;

@@ -35,8 +35,8 @@
 		<title>Lyrene's Murmur</title>
 	</head>
 	<body>
-		<div id="index" v-scroll="scrolling">
-			<div class="header"><img src="./img/title.png"></div>
+		<div class="header"><img src="./img/title.png"></div>
+		<div id="index"><div id="scrolling-inside">
 			<!-- index -->
             <div class="index-container">
                 <div class="index-left">
@@ -55,9 +55,9 @@
 				</div>
                 <div id="index-right" class="index-right ani-slidedown">
                     <div class="title-container"><img src="./img/title.png"></div>
-					<div id="swiper-container" class="swiper-container">
+					<div class="swiper-container"><div id="swiper" class="swiper-inside">
 						<img v-for="(pic,index) in album" :src="'img/'+pic.name" :id="'album-'+(index+1)" :title="pic.text">
-					</div>
+					</div></div>
                 </div>
                 <div class="index-img-page-dot">
 					<div class="page-dot" v-for="(pic,index) in album" :title="pic.text"
@@ -100,7 +100,7 @@
 			<div class="footer-container waiting-to-show">
 				<div class="copyright">ver. {{ version }} © Copyright 2020 {{ copyrightYear }} Lyrene. All rights reserved.</div>
 			</div>
-		</div>
+		</div></div>
 
 		<!-- js pollyfills -->
 		<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -110,5 +110,7 @@
 		<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 		<!-- js main -->
 		<script type="text/babel" src="./js/index.js"></script>
+		<!-- js plugins -->
+		<script src="https://unpkg.com/better-scroll/dist/bscroll.min.js"></script>
 	</body>
 </html>
