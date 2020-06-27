@@ -23,13 +23,16 @@ html {
     overflow-x: hidden;
 }
 body {
+    background-color: var(--lyrene-main-bg, #1e242b);
     height: 100%;
     font-family: -apple-system, BlinkMacSystemFont, Verdana, "Microsoft JhengHei", sans-serif;
-    background-color: var(--lyrene-main-bg, #1e242b);
 }
 #index {
     display: var(--show-index, "none");
-    height: var(--vh, 100vh);
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
     overflow: hidden;
 }
 img {
