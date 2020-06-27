@@ -87,9 +87,6 @@ $(document).ready(function () {
 			},
 			//scroll
 			setScroll: function () {
-				document.body.addEventListener("touchmove", function (e) {
-					e.preventDefault();
-				  }, { passive: false });
 				this.scroll = new BScroll("#index", {
 					bindToWrapper: true,
 					disableMouse: false, disableTouch: false,
