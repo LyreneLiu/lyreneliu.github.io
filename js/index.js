@@ -46,8 +46,7 @@ $(document).ready(function () {
 			this.getSeniority(); this.getCopyright();
 			this._swiper = () => {
 				this.INITswiper(); this.albumSeleted += 1;
-				setTimeout(() => this.setSwiperTimer(), 4000);
-				this.removeRightEvent();
+				this.setSwiperTimer(); this.removeRightEvent();
 			};
 			//prevent mobile user resizing the web
 			let lastTouchEnd = 0;
@@ -61,9 +60,9 @@ $(document).ready(function () {
 			}, false);
 			//resize event (on computer web)
 			window.addEventListener("resize", () => {
+				clearInterval(this.albumChanging);
+				clearTimeout(this.albumReload);
 				this.rwdWH(() => {
-					clearTimeout(this.albumChanging);
-					clearTimeout(this.albumReload);
 					this.INITswiper();
 					this.toSwiper(this.albumSeleted - 1);
 				});
@@ -129,18 +128,12 @@ $(document).ready(function () {
 					this.moveSwiper(i + 1, this.albumCalc * i, false);
 				}
 			},
-			setSwiperTimer: async function () {
-				let l = this.album.length; const swiping = t => {
-					return new Promise(resolve => {
-						this.albumChanging = setTimeout(resolve, t);
-					});
-				};
-				this.albumChanging = 4000;
-				while (!!this.albumChanging) {
-					this.albumSeleted
-					+= this.albumSeleted < l ? 1 : (-l + 1);
-					this.activeSwiper(); await swiping(4000);
-				}
+			setSwiperTimer: function () {
+				let l = this.album.length;
+				this.albumChanging = setInterval(() => {
+					this.albumSeleted += this.albumSeleted < l ? 1 : (-l + 1);
+					this.activeSwiper();
+				}, 3500);
 			},
 			activeSwiper: function () {
 				let l = this.album.length;
@@ -166,7 +159,7 @@ $(document).ready(function () {
 			},
 			toSwiper: function (i) {
 				if (this.albumSeleted !== 0) {
-					clearTimeout(this.albumChanging);
+					clearInterval(this.albumChanging);
 					clearTimeout(this.albumReload);
 					let l = this.album.length;
 					this.albumSeleted = i + 1;
@@ -174,7 +167,7 @@ $(document).ready(function () {
 						let reduce = (j - i - 1) * this.albumCalc;
 						this.moveSwiper(j, reduce, true);
 					}
-					setTimeout(() => this.setSwiperTimer(), 4000);
+					this.setSwiperTimer();
 				}
 			},
 		//GROUP: others
