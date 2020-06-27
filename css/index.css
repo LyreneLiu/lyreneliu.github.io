@@ -28,9 +28,9 @@ body {
     background-color: var(--lyrene-main-bg, #1e242b);
 }
 #index {
-    height: 100%;
-    overflow: hidden;
     display: var(--show-index, "none");
+    height: var(--vh, 100vh);
+    overflow: hidden;
 }
 img {
     -webkit-user-select:none;
