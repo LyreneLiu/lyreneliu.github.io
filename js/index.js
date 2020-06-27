@@ -93,14 +93,6 @@ $(document).ready(function () {
 					mouseWheel: true, probeType: 3,
 					scrollbar: { fade: true, interactive: true }
 				});
-				let panTo = e => {
-					let _y = e.y * -1;
-					if (_y < this.vh && _y !== 0) {
-						_y < this.vh / 2 ?
-							this.scroll.scrollTo(0, 0, 500)
-						:	this.scrollAbout();
-					}
-				};
 				let animate = e => {
 					let _y = e.y * -1;
 					if (_y <= this.vh / 2 && _y > this.vh / 4
@@ -120,8 +112,6 @@ $(document).ready(function () {
 						_y < this.vh ? "0" : ".8"
 					);
 				};
-				this.scroll.on("touchEnd", panTo);
-				this.scroll.on("scrollEnd", panTo);
 				this.scroll.on("scroll", animate);
 			},
 		//GROUP: animation
