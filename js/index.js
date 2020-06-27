@@ -96,7 +96,7 @@ $(document).ready(function () {
 				let panTo = e => {
 					let _y = e.y * -1;
 					if (_y < this.vh && _y !== 0) {
-						_y < this.vh / 2 ?
+						_y < this.vh / 3 * 2 ?
 							this.scroll.scrollTo(0, 0, 500)
 						:	this.scrollAbout();
 					}
