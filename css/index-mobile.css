@@ -32,7 +32,7 @@
     text-align: center;
     transform: translateY(100vh);
 }
-.index-left .left-child:active {
+.index-left .left-child:active:not([disabled]) {
     width: 100%;
     height: auto;
 }
@@ -134,6 +134,14 @@
 }
 .profile-name {
     margin-top: 1rem;
+}
+.about-flex {
+    -webkit-flex-flow: column;
+    -ms-flex-flow: column;
+    flex-flow: column;
+}
+.d3-select-group {
+    padding: 0 20px;
 }
 @media screen and (min-width: 601px) {
     .index-left .left-child {

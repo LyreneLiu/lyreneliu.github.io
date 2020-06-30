@@ -7,6 +7,22 @@ $(document).ready(function () {
 		data: function () {
 			return {
 				scroll: null,
+				d3Data: [
+					{ id: 0, name: "AJAX", value: 7, _value: "很能活用", type: "FE" },
+					{ id: 1, name: "Bootstrap 4", value: 9, _value: "信手拈來", type: "FE" },
+					{ id: 2, name: "PWA", value: 5.5, _value: "得以實作", type: "FE" },
+					{ id: 3, name: "RWD", value: 7, _value: "很能活用", type: "FE" },
+					{ id: 4, name: "Vuejs", value: 8, _value: "熟門熟路", type: "FE" },
+					{ id: 5, name: "UI/UX", value: 7.5, _value: "設計感佳", type: "design" },
+					{ id: 6, name: "WebApp", value: 7, _value: "還挺上手", type: "APP" },
+					{ id: 7, name: "Git", value: 4, _value: "基本操作", type: "manage" },
+					{ id: 8, name: "Timeline", value: 6.5, _value: "安全範圍", type: "manage" }
+				],
+				d3Sorts: [
+					{ value: 0, txt: "預設順序排序", func: (a, b) => a.name.localeCompare(b.name) },
+					{ value: 1, txt: "熟練度升冪排序", func: (a, b) => a.value - b.value },
+					{ value: 2, txt: "熟練度降冪排序", func: (a, b) => b.value - a.value }
+				],
 				album: [
 					{ name: "album-1.JPG", text: "ME" },
 					{ name: "album-2.JPG", text: "OUTGOING" },
@@ -14,12 +30,19 @@ $(document).ready(function () {
 					{ name: "album-4.JPG", text: "SWEET TOOTH" },
 					{ name: "album-5.JPG", text: "HAPPINESS" }
 				],
+				//swiper
 				albumCalc: null,
 				albumDirect: "Y",
 				albumSeleted: 0,
 				albumChanging: null,
 				albumReload: null,
 				_swiper: null,
+				//d3
+				d3Ok: false,
+				d3Chart: null,
+				d3Selected: null,
+				d3Sorted: 0,
+				//others
 				vh: 0,
 				seniority: null,
 				copyrightYear: null,
@@ -64,13 +87,31 @@ $(document).ready(function () {
 					this.changeCssRoot("--smooth-header", "0");
 					let l = this.album.length + 1;
 					$("#swiper").append(
-						$("#album-1").clone(true).attr("id", `album-${l}`)
+						$("#album-1").clone(true)
+							.attr("id", `album-${l}`)
 					);
 					this.sliding();
 				});
 			});
 		},
-		watch: {},
+		computed: {
+			d3SelectedData: function () {
+				let data = null;
+				if (this.d3Selected !== null) {
+					for (let i = 0; i < this.d3Data.length; i ++) {
+						if (this.d3Data[i].id === this.d3Selected) {
+							data = this.d3Data[i]; break;
+						}
+					}
+				}
+				return data;
+			}
+		},
+		watch: {
+			d3Sorted: function (v) {
+				this.d3Chart(this.d3Sorts[v].func);
+			}
+		},
 		methods: {
 			//RWD height
 			rwdWH: function (CB) {
@@ -108,6 +149,7 @@ $(document).ready(function () {
 						for (let i = 1; i <= 4; i ++) {
 							let _d
 							= document.getElementById(`left-${i}`);
+							_d.style.removeProperty("transform");
 							_d.style.animationDirection = "normal";
 							_d.style.animationDuration = "750ms";
 							_d.classList.remove("ani-slideup");
@@ -133,6 +175,9 @@ $(document).ready(function () {
 				while (i !== null) {
 					let child = document.getElementById(`left-${i}`);
 					if (child) {
+						child.addEventListener("animationend", e => {
+							child.style.transform = "translateY(0)";
+						});
 						child.style.animationPlayState = "running";
 						i += 1; await delaySlide(500);
 					} else {
@@ -149,6 +194,7 @@ $(document).ready(function () {
 					_h = $("#swiper").height();
 				this.albumCalc = _w > _h ? _w : _h;
 				this.albumDirect = _w > _h ? "X" : "Y";
+				this.d3Chart = this.drawD3Chart();
 				let l = this.album.length;
 				for (let i = 1; i <= l + 1; i ++) {
 					$(`#album-${i}`).css(
@@ -191,6 +237,153 @@ $(document).ready(function () {
 					this.moveSwiper(this.albumSeleted, true);
 					this.setSwiperTimer();
 				}
+			},
+		//GROUP: d3
+			drawD3Chart: function () {
+				//data
+				const container = $("#d3-chart"), s = 45;
+				const w = container.width();
+				const h = this.albumDirect === "Y" ?
+					400 : (60 * this.d3Data.length);
+				//remove old one
+				d3.select("#d3-chart>svg").remove();
+				//create
+				const svg = d3.select("#d3-chart").append("svg")
+					.attr("width", w).attr("height", h);
+				//scales
+				let x, y, xAxis, yAxis, bar, valTxt;
+				if (this.albumDirect === "Y") {
+					x = d3.scaleBand()
+						.domain(this.d3Data.map(d => d.name))
+						.range([s, w - s]).padding(0.2);
+					y = d3.scaleLinear()
+						.domain([0, 10]).range([h - s, s]);
+					xAxis = g => g
+						.attr("class", "lyrene-x")
+						.attr("transform", `translate(0,${h - s})`)
+						.call(d3.axisBottom(x).tickSizeOuter(0));
+					yAxis = g => g
+						.attr("class", "lyrene-y")
+						.attr("transform", `translate(${s},0)`)
+						.call(d3.axisLeft(y))
+						.call(g => g.select(".domain").remove());
+					bar = svg.append("g")
+						.attr("class", "lyrene-chart")
+						.selectAll("rect")
+						.data(this.d3Data)
+						.join("rect")
+						.attr("id", d => `chart-${d.id}`)
+						.attr("class", d => d.type)
+						.attr("x", d => x(d.name))
+						.attr("y", d => y(d.value))
+						.attr("height", d => y(0) - y(d.value))
+						.attr("width", x.bandwidth())
+						.on("click", this.clickEvt);
+					valTxt = svg.append("g")
+						.attr("class", "lyrene-chart-val")
+						.selectAll("text")
+						.data(this.d3Data)
+						.join("text")
+						.attr("x", d => x(d.name) + x.bandwidth() / 2)
+						.attr("y", d => y(d.value) + 20)
+						.attr("text-anchor", "middle")
+						.text(d => d.value);
+				} else {
+					x = d3.scaleLinear()
+						.domain([10, 0]).range([w - s / 2, s / 2]);
+					y = d3.scaleBand()
+						.domain(this.d3Data.map(d => d.name))
+						.range([s, h - s]).padding(0.2);
+					xAxis = g => g
+						.attr("class", "lyrene-y")
+						.attr("transform", `translate(${s / 2},0)`)
+						.call(d3.axisRight(y))
+						.call(g => g.select(".domain").remove());
+					yAxis = g => g
+						.attr("class", "lyrene-x")
+						.attr("transform", `translate(0,${h - s})`)
+						.call(d3.axisBottom(x).tickSizeOuter(0));
+					bar = svg.append("g")
+						.attr("class", "lyrene-chart")
+						.selectAll("rect")
+						.data(this.d3Data)
+						.join("rect")
+						.attr("id", d => `chart-${d.id}`)
+						.attr("class", d => d.type)
+						.attr("x", d => x(0))
+						.attr("y", d => y(d.name))
+						.attr("height", y.bandwidth())
+						.attr("width", d => x(d.value) - x(0))
+						.on("click", this.clickEvt);
+					valTxt = svg.append("g")
+						.attr("class", "lyrene-chart-val")
+						.selectAll("text")
+						.data(this.d3Data)
+						.join("text")
+						.attr("x", d => x(d.value) - 20)
+						.attr("y", d => y(d.name) + y.bandwidth() / 2)
+						.attr("text-anchor", "middle")
+						.attr("dominant-baseline", "middle")
+						.text(d => d.value);
+				}
+				const gx = svg.append("g").call(xAxis);
+				const gy = svg.append("g").call(yAxis);
+				this.d3Ok = true; this.d3ClickDefault();
+				//changing sort
+				return (order) => {
+					const t = svg.transition().duration(300);
+					if (this.albumDirect === "Y") {
+						x.domain(this.d3Data.sort(order).map(d => d.name));
+						bar.data(this.d3Data, d => d.name)
+							.order()
+							.transition(t)
+							.delay((d, i) => i * 20)
+							.attr("x", d => x(d.name));
+						valTxt.data(this.d3Data, d => d.name)
+							.order()
+							.transition(t)
+							.delay((d, i) => i * 20)
+							.attr("x", d => x(d.name) + x.bandwidth() / 2);
+					} else {
+						y.domain(this.d3Data.sort(order).map(d => d.name));
+						bar.data(this.d3Data, d => d.name)
+							.order()
+							.transition(t)
+							.delay((d, i) => i * 20)
+							.attr("y", d => y(d.name));
+						valTxt.data(this.d3Data, d => d.name)
+							.order()
+							.transition(t)
+							.delay((d, i) => i * 20)
+							.attr("y", d => y(d.name) + y.bandwidth() / 2);
+					}
+					gx.transition(t)
+					.call(xAxis)
+					.selectAll(".tick")
+					.delay((d, i) => i * 20);
+				};
+			},
+			clickEvt: function (d, i) {
+				let parent = document.getElementsByClassName("lyrene-chart");
+				if (parent[0]) {
+					let cur = parent[0].querySelector(`#chart-${d.id}`);
+					cur && cur.setAttribute("data-selected", "true");
+					let pre = parent[0]
+						.querySelector(`#chart-${this.d3Selected}`);
+					(this.d3Selected !== null && this.d3Selected !== d.id && pre)
+					&& pre.setAttribute("data-selected", "false");
+				}
+				this.d3Selected = d.id;
+			},
+			d3ClickDefault: function () {
+				let num = this.d3Selected === null ?
+					this.d3Data.length - 1 : this.d3Selected;
+				let parent = document.getElementsByClassName("lyrene-chart");
+				if (parent[0]) {
+					let cur = parent[0].querySelector(`#chart-${num}`);
+					cur && cur.setAttribute("data-selected", "true");
+				}
+				this.d3Selected = num;
 			},
 		//GROUP: others
 			getSeniority: function () {

@@ -1,13 +1,11 @@
 .ani-slideup {
     animation-name: slideup;
     animation-duration: 1.5s;
-    animation-fill-mode: forwards;
     animation-play-state: paused;
 }
 .ani-slidedown {
     animation-name: slidedown;
     animation-duration: 1.5s;
-    animation-fill-mode: forwards;
     animation-play-state: paused;
 }
 @keyframes slideup {
@@ -24,6 +22,7 @@
 }
 @keyframes slidedown {
     0% {
+        transform: translateY(-100vh);
         opacity: 0;
     }
     50% {
