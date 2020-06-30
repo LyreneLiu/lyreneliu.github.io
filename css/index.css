@@ -480,11 +480,10 @@ img {
     }
 /* GROUP: d3 */
     .d3-left {
-        -webkit-box-flex: none;
-        flex: none;
-        width: 850px;
+        width: calc(100% - 250px);
     }
     .d3-right {
+        width: 250px;
         padding-left: 1rem;
         padding-bottom: 1rem;
         border-left: solid 1px white;
@@ -495,7 +494,7 @@ img {
             -ms-flex-flow: column;
             flex-flow: column;
         }
-        .d3-left {
+        .d3-left, .d3-right {
             -webkit-box-flex: 1;
             flex: 1;
             width: auto;
@@ -504,8 +503,8 @@ img {
             padding-left: 0;
             border-left: none;
             padding-top: 1rem;
-            border-top: solid 1px white;    
-        }    
+            border-top: solid 1px white;
+        }
     }
     #d3-chart {
         width: 100%;
