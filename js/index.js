@@ -241,7 +241,7 @@ $(document).ready(function () {
 		//GROUP: d3
 			drawD3Chart: function () {
 				//data
-				const container = $("#d3-chart"), s = 45;
+				const container = $("#d3-chart"), s = 40;
 				const w = container.width();
 				const h = this.albumDirect === "Y" ?
 					400 : (60 * this.d3Data.length);
@@ -293,10 +293,10 @@ $(document).ready(function () {
 						.domain([10, 0]).range([w - s / 2, s / 2]);
 					y = d3.scaleBand()
 						.domain(this.d3Data.map(d => d.name))
-						.range([s, h - s]).padding(0.2);
+						.range([s / 2, h - s]).padding(0.2);
 					xAxis = g => g
 						.attr("class", "lyrene-y")
-						.attr("transform", `translate(${s / 2},0)`)
+						.attr("transform", `translate(${s},0)`)
 						.call(d3.axisRight(y))
 						.call(g => g.select(".domain").remove());
 					yAxis = g => g
