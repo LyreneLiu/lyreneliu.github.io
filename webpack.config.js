@@ -1,34 +1,29 @@
 const path = require("path");
-const {CleanWebpackPlugin} = require("clean-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
+const {CleanWebpackPlugin} = require("clean-webpack-plugin");
 
 module.exports = {
-	mode: "development",
+	mode: "production",
 	devtool: "none",
-	entry: "./js/index.js",
+	entry: "./src/index.js",
+	output: {
+		path: __dirname + "/js/",
+		filename: "index.bundle.[chunkhash].js"
+	},
+	module: {},
 	plugins: [
 		new CleanWebpackPlugin()
 	],
-	rules: [{
-		test: /\.js$/,
-		use: {
-			loader: "babel-loader",
-			options: {
-				presets: ["@babel/preset-env"]
-			}
-		}
-	}],
 	optimization: {
         minimizer: [
             new TerserPlugin({
-                cache: true,
                 parallel: true,
                 terserOptions: {
                     output: {
                         comments: false
                     }
                 }
-            })
+			})
         ]
     }
 };

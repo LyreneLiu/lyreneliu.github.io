@@ -1,28 +1,67 @@
 "use strict";
 
+import * as d3 from "d3";
+import BScroll from "better-scroll";
+
 $(document).ready(function () {
-//GROUP: scroll event
+//GROUP: plugins
+//GROUP: Vue
 	var vm = new Vue({
-		el: "#index",
+		el: "#whole",
 		data: function () {
 			return {
+				//scroll
 				scroll: null,
+				isTop: true,
+				//d3
 				d3Data: [
-					{ id: 0, name: "AJAX", value: 7, _value: "很能活用", type: "FE" },
-					{ id: 1, name: "Bootstrap 4", value: 9, _value: "信手拈來", type: "FE" },
-					{ id: 2, name: "PWA", value: 5.5, _value: "得以實作", type: "FE" },
-					{ id: 3, name: "RWD", value: 7, _value: "很能活用", type: "FE" },
-					{ id: 4, name: "Vuejs", value: 8, _value: "熟門熟路", type: "FE" },
-					{ id: 5, name: "UI/UX", value: 7.5, _value: "設計感佳", type: "design" },
-					{ id: 6, name: "WebApp", value: 7, _value: "還挺上手", type: "APP" },
-					{ id: 7, name: "Git", value: 4, _value: "基本操作", type: "manage" },
-					{ id: 8, name: "Timeline", value: 6.5, _value: "安全範圍", type: "manage" }
+					{
+						id: 0, name: "AJAX", value: 7, _value: "很能活用", type: "FE",
+						list: ["了解基礎傳輸概念", "使用 jQuery Ajax", "全域設定", "異步的 callback 操作", "傳輸的提示套件使用"]
+					},
+					{
+						id: 1, name: "Bootstrap 4", value: 9.5, _value: "信手拈來", type: "FE",
+						list: ["額外套件的使用", "整體的柵格布局", "搭配自訂 css 客製化風格", "Bootstrap hack"]
+					},
+					{
+						id: 2, name: "RWD", value: 7.5, _value: "很能活用", type: "FE",
+						list: ["基本的實作方式", "輔以 js 監聽特定狀況", "表格的 RWD 實作", "手切 RWD 版型"]
+					},
+					{
+						id: 3, name: "SPA", value: 5, _value: "得以實作", type: "FE",
+						list: ["了解基本的實現原理", "了解 SEO 的基本解決策略", "以 Vue Router 實作"]
+					},
+					{
+						id: 4, name: "Vuejs", value: 8, _value: "熟門熟路", type: "FE",
+						list: ["基本概念與實作", "理解雙向綁定的原理", "組件包裝與複用", "Vuex 的使用與操作", "Vue Router 的配置"]
+					},
+					{
+						id: 5, name: "UI/UX", value: 7, _value: "設計感佳", type: "design",
+						list: ["具備美感與基礎製圖能力", "功能的隱藏與開放判斷", "針對客群優化版面的配置", "藉個人與他人體驗加強技術"]
+					},
+					{
+						id: 6, name: "Web App", value: 6.5, _value: "還挺上手", type: "APP",
+						list: ["具有實作經驗", "盡力接近 Native App", "性能與速度上的基本優化"]
+					},
+					{
+						id: 7, name: "Git", value: 4, _value: "基本操作", type: "manage",
+						list: ["基本指令的使用", "commit 的用詞規格化", "擔心破壞專案而嚴謹版控"]
+					},
+					{
+						id: 8, name: "Timeline", value: 6, _value: "安全範圍", type: "manage",
+						list: ["幾乎都在談妥的時限前完成", "無法完成的部分會先溝通", "不會因個人拖累團體進度", "自我負責"]
+					}
 				],
 				d3Sorts: [
-					{ value: 0, txt: "預設順序排序", func: (a, b) => a.name.localeCompare(b.name) },
+					{ value: 0, txt: "預設順序排序", func: (a, b) => a.id - b.id },
 					{ value: 1, txt: "熟練度升冪排序", func: (a, b) => a.value - b.value },
 					{ value: 2, txt: "熟練度降冪排序", func: (a, b) => b.value - a.value }
 				],
+				d3Ok: false,
+				d3Chart: null,
+				d3Selected: null,
+				d3Sorted: 0,
+				//swiper
 				album: [
 					{ name: "album-1.JPG", text: "ME" },
 					{ name: "album-2.JPG", text: "OUTGOING" },
@@ -30,18 +69,12 @@ $(document).ready(function () {
 					{ name: "album-4.JPG", text: "SWEET TOOTH" },
 					{ name: "album-5.JPG", text: "HAPPINESS" }
 				],
-				//swiper
 				albumCalc: null,
 				albumDirect: "Y",
 				albumSeleted: 0,
 				albumChanging: null,
 				albumReload: null,
 				_swiper: null,
-				//d3
-				d3Ok: false,
-				d3Chart: null,
-				d3Selected: null,
-				d3Sorted: 0,
 				//others
 				vh: 0,
 				seniority: null,
@@ -141,6 +174,7 @@ $(document).ready(function () {
 							this.scroll.scrollTo(0, 0, 500)
 						:	this.scrollAbout();
 					}
+					this.isTop = _y === 0;
 				};
 				let animate = e => {
 					let _y = e.y * -1;
@@ -165,6 +199,12 @@ $(document).ready(function () {
 				this.scroll.on("touchEnd", panTo);
 				this.scroll.on("scrollEnd", panTo);
 				this.scroll.on("scroll", animate);
+			},
+			scrollTop: function () {
+				this.scroll.scrollTo(0, 0, 500);
+			},
+			scrollAbout: function () {
+				this.scroll.scrollToElement(".about-container", 500);
 			},
 		//GROUP: animation
 			sliding: async function () {
@@ -255,7 +295,7 @@ $(document).ready(function () {
 				if (this.albumDirect === "Y") {
 					x = d3.scaleBand()
 						.domain(this.d3Data.map(d => d.name))
-						.range([s, w - s]).padding(0.2);
+						.range([s, w - s + 5]).padding(0.2);
 					y = d3.scaleLinear()
 						.domain([0, 10]).range([h - s, s]);
 					xAxis = g => g
@@ -385,6 +425,13 @@ $(document).ready(function () {
 				}
 				this.d3Selected = num;
 			},
+		//GROUP: contacts
+			mailMe: function () {
+				window.location.href = "mailto:lyreneliu@gmail.com";
+			},
+			goGithub: function () {
+				window.open("https://github.com/LyreneLiu", "_blank");
+			},
 		//GROUP: others
 			getSeniority: function () {
 				let today = new Date();
@@ -435,12 +482,12 @@ $(document).ready(function () {
 			changeCssRoot: function (property, v) {
 				document.documentElement.style.setProperty(property, v);
 			},
-			scrollAbout: function () {
-				this.scroll.scrollToElement(".about-container", 500);
-			},
 			removeRightEvent: function () {
 				let right = document.getElementById("index-right");
 				right.removeEventListener("animationend", this._swiper);
+			},
+			openUndoModal: function () {
+				$("#undo").modal("show");
 			}
 		}
 	});

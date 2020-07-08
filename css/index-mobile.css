@@ -141,7 +141,7 @@
     flex-flow: column;
 }
 .d3-select-group {
-    padding: 0 20px;
+    margin: 0 20px;
 }
 @media screen and (min-width: 601px) {
     .index-left .left-child {

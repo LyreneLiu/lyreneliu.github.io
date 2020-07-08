@@ -27,6 +27,8 @@
 		<meta name="twitter:description" content="Hi! I'm Lyrene, a frontend engineer which feels high enthusiasm and interested in coding." />
 		<meta name="twitter:creator" content="@uj10301" />
 		<meta name="twitter:image:src" content="https://lyreneliu.github.io/img/icon-76.png" />
+		<!-- fontawesome -->
+		<script src="https://kit.fontawesome.com/2437a479eb.js" crossorigin="anonymous"></script>
 		<!-- css -->
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous" />
 		<link rel="stylesheet" href="./css/index.css">
@@ -35,105 +37,123 @@
 		<title>Lyrene's Murmur</title>
 	</head>
 	<body>
-		<div class="header"><img src="./img/title.png"></div>
-		<div id="index"><div id="scrolling-inside">
-			<!-- index -->
-            <div class="index-container">
-                <div class="index-left">
-					<div id="left-1" class="left-child main-btn-1 ani-slideup" @click="scrollAbout">
-						<div class="btn-t-en">ABOUT LYRENE</div><div>關於我</div>
+		<div id="whole">
+			<div class="header"><img src="./img/title.png"></div>
+			<div class="scroll-top" @click="scrollTop" v-show="!isTop"><i class="fas fa-angle-up"></i></div>
+			<div id="index"><div id="scrolling-inside">
+				<!-- index -->
+				<div class="index-container">
+					<div class="index-left">
+						<div id="left-1" class="left-child main-btn-1 ani-slideup" @click="scrollAbout">
+							<div class="btn-t-en">ABOUT LYRENE</div><div>關於我</div>
+						</div>
+						<div id="left-2" class="left-child main-btn-2 ani-slideup" disabled @click="openUndoModal">
+							<div class="btn-t-en">WORKS</div><div>作品集</div>
+						</div>
+						<div id="left-3" class="left-child main-btn-3 ani-slideup" disabled @click="openUndoModal">
+							<div class="btn-t-en">FRONTEND MEMO</div><div>前端那些毛</div>
+						</div>
+						<div id="left-4" class="left-child main-btn-4 ani-slideup" disabled @click="openUndoModal">
+							<div class="btn-t-en">DAILY</div><div>日常瑣事</div>
+						</div>
 					</div>
-					<div id="left-2" class="left-child main-btn-2 ani-slideup" disabled>
-						<div class="btn-t-en">WORKS</div><div>作品集</div>
+					<div id="index-right" class="index-right ani-slidedown">
+						<div class="title-container"><img src="./img/title.png"></div>
+						<div class="swiper-container"><div id="swiper" class="swiper-inside">
+							<img v-for="(pic,index) in album" :src="'img/'+pic.name" :id="'album-'+(index+1)" :title="pic.text">
+						</div></div>
 					</div>
-					<div id="left-3" class="left-child main-btn-3 ani-slideup" disabled>
-						<div class="btn-t-en">FRONTEND MEMO</div><div>前端那些毛</div>
-					</div>
-					<div id="left-4" class="left-child main-btn-4 ani-slideup" disabled>
-						<div class="btn-t-en">DAILY</div><div>日常瑣事</div>
+					<div class="index-img-page-dot">
+						<div class="page-dot" v-for="(pic,index) in album" :title="pic.text"
+							:style="albumSeleted===index+1?'':'background-color:var(--lyrene-dot-'+(index+1)+')'"
+							:class="{'page-dot-chosen':albumSeleted===index+1}" @click="toSwiper(index)">
+						</div>
 					</div>
 				</div>
-                <div id="index-right" class="index-right ani-slidedown">
-                    <div class="title-container"><img src="./img/title.png"></div>
-					<div class="swiper-container"><div id="swiper" class="swiper-inside">
-						<img v-for="(pic,index) in album" :src="'img/'+pic.name" :id="'album-'+(index+1)" :title="pic.text">
+				<!-- about -->
+				<div class="about-container waiting-to-show">
+					<div class="about-title">
+						<h3 class="tw">關於我</h3><h5 class="en">ABOUT LYRENE</h5>
+						<div class="line"></div>
+					</div>
+					<div class="about-box-main">
+						<div class="head-shot"></div>
+						<div class="profile">
+							<div class="profile-name">Lyrene Liu (YUYU)</div>
+							<div class="profile-group">
+								<div class="profile-title">前端資歷</div><div class="profile-sub">{{ seniority }}（2019.11&nbsp;-）</div>
+							</div>
+							<div class="profile-group">
+								<div class="profile-title">最高學歷</div><div class="profile-sub">淡江大學資訊與圖書館學系學士</div>
+							</div>
+							<div class="profile-group">
+								<div class="profile-title">專業技能</div><div class="profile-txt">JS套件開發．API串接．Vuejs．UI/UX．RWD．Adobe PS & AI．中文美學</div>
+							</div>
+							<div class="profile-group">
+								<div class="profile-title">日常興趣</div><div class="profile-txt">學習．coding．閱讀．卡娜赫拉．遊戲宅</div>
+							</div>
+							<div class="profile-group">
+								<div class="profile-title">自我介紹</div>
+								<div class="profile-txt">我想證明，只要有 coding 的熱忱，即使非本科系也能投入這個領域。渴望更精進自己，除了不斷的學習使進步神速，也崇尚在團體工作中惕勵自己。並總是盡我所能達成每一項可能原先完全不熟悉的任務。</div>
+							</div>
+						</div>
+					</div>
+					<div class="about-box">
+						<div class="about-title box"><h4>技能熟練度</h4></div>
+						<div class="w-100 loading" style="height:100px;" v-if="!d3Ok"></div>
+						<div class="about-flex d3">
+							<div class="d3-left">
+								<div class="d3-select-group" v-show="d3Ok">
+									<select class="form-control lyrene-select" v-model="d3Sorted">
+										<option v-for="sort in d3Sorts" :value="sort.value">{{ sort.txt }}</option>
+									</select>
+								</div>
+								<div class="d3-select-group text-right mt-4 d3-tag-group" v-show="d3Ok">
+									<div class="d3-dot d3-dot-1">前端技能</div>
+									<div class="d3-dot d3-dot-2">設計技能</div>
+									<div class="d3-dot d3-dot-3">APP&nbsp;技能</div>
+									<div class="d3-dot d3-dot-4">管理技能</div>
+								</div>
+								<div id="d3-chart"></div>
+							</div>
+							<div class="d3-right flex-1" v-if="d3SelectedData!==null">
+								<div class="about-title box"><h6>{{ d3SelectedData.name }}</h6></div>
+								<div class="text-center">熟練度：{{ d3SelectedData.value }}（{{ d3SelectedData._value }}）</div>
+								<ul class="d3-right-ul"><li v-for="list in d3SelectedData.list">{{ list }}</li></ul>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- footer -->
+				<div class="footer-container waiting-to-show">
+					<div class="contact-outer"><div class="contact-inner">
+						<div class="footer-contact" @click="mailMe"><i class="footer-icon fas fa-envelope mr-2"></i>lyreneliu@gmail.com</div>
+						<div class="footer-contact" @click="goGithub"><i class="footer-icon fab fa-github mr-2"></i>Lyrene Liu (LyreneLiu)</div>
 					</div></div>
-                </div>
-                <div class="index-img-page-dot">
-					<div class="page-dot" v-for="(pic,index) in album" :title="pic.text"
-						:style="albumSeleted===index+1?'':'background-color:var(--lyrene-dot-'+(index+1)+')'"
-						:class="{'page-dot-chosen':albumSeleted===index+1}" @click="toSwiper(index)">
+					<div class="copyright">ver. {{ version }} © Copyright 2020 {{ copyrightYear }} Lyrene. All rights reserved.</div>
+				</div>
+			</div></div>
+			<!-- modal -->
+			<div class="modal fade" id="undo" tabindex="-1" role="dialog" aria-labelledby="undoLabel" aria-hidden="true">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+						<h5 class="modal-title" id="undoLabel">敬請期待 Comming Soon</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+						</div>
+						<div class="modal-body">製作中，日後將會推出！</div>
 					</div>
 				</div>
 			</div>
-			<!-- about -->
-			<div class="about-container waiting-to-show">
-				<div class="about-title">
-					<h3 class="tw">關於我</h3><h5 class="en">ABOUT LYRENE</h5>
-					<div class="line"></div>
-				</div>
-				<div class="about-box-main">
-					<div class="head-shot"></div>
-					<div class="profile">
-						<div class="profile-name">Lyrene Liu (YUYU)</div>
-						<div class="profile-group">
-							<div class="profile-title">前端資歷</div><div class="profile-sub">{{ seniority }}（2019.11&nbsp;-）</div>
-						</div>
-						<div class="profile-group">
-							<div class="profile-title">最高學歷</div><div class="profile-sub">淡江大學資訊與圖書館學系學士</div>
-						</div>
-						<div class="profile-group">
-							<div class="profile-title">專業技能</div><div class="profile-txt">JS套件開發．API串接．Vuejs．UI/UX．RWD．Adobe PS & AI．中文美學</div>
-						</div>
-						<div class="profile-group">
-							<div class="profile-title">日常興趣</div><div class="profile-txt">學習．coding．閱讀．卡娜赫拉．遊戲宅</div>
-						</div>
-						<div class="profile-group">
-							<div class="profile-title">自我介紹</div>
-							<div class="profile-txt">我想證明，只要有 coding 的熱忱，即使非本科系也能投入這個領域。渴望更精進自己，除了不斷的學習使進步神速，也崇尚在團體工作中惕勵自己。並總是盡我所能達成每一項可能原先完全不熟悉的任務。</div>
-						</div>
-					</div>
-				</div>
-				<div class="about-box">
-					<div class="about-title box"><h4>技能熟練度</h4></div>
-					<div class="w-100 loading" style="height:100px;" v-if="!d3Ok"></div>
-					<div class="about-flex d3">
-						<div class="d3-left">
-							<div class="d3-select-group" v-show="d3Ok">
-								<select class="form-control lyrene-select" v-model="d3Sorted">
-									<option v-for="sort in d3Sorts" :value="sort.value">{{ sort.txt }}</option>
-								</select>
-							</div>
-							<div class="d3-select-group text-right mt-4" v-show="d3Ok">
-								<div class="d3-dot d3-dot-1">前端技能</div>
-								<div class="d3-dot d3-dot-2">設計技能</div>
-								<div class="d3-dot d3-dot-3">APP&nbsp;技能</div>
-								<div class="d3-dot d3-dot-4">管理技能</div>
-							</div>
-							<div id="d3-chart"></div>
-						</div>
-						<div class="d3-right flex-1" v-if="d3SelectedData!==null">
-							<div class="about-title box"><h6>{{ d3SelectedData.name }}</h6></div>
-							<div>熟練度：{{ d3SelectedData.value }}（{{ d3SelectedData._value }}）</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<!-- footer -->
-			<div class="footer-container waiting-to-show">
-				<div class="copyright">ver. {{ version }} © Copyright 2020 {{ copyrightYear }} Lyrene. All rights reserved.</div>
-			</div>
-		</div></div>
+		</div>
 
-		<!-- js pollyfills -->
-		<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 		<!-- js frames -->
 		<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 		<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
 		<!-- js main -->
-		<script type="text/babel" src="./js/index.js"></script>
-		<!-- js plugins -->
-		<script src="https://unpkg.com/better-scroll/dist/bscroll.min.js"></script>
-		<script src="https://d3js.org/d3.v5.min.js"></script>
+		<script src="./js/index.bundle.abbcf15e24c82893c287.js"></script>
 	</body>
 </html>
