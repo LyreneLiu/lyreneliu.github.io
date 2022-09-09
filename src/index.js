@@ -442,7 +442,6 @@ $(document).ready(function () {
 				let realM = (year + month) % 12 === 0 ? ""
 				: ((year + month) % 12 + " 個月");
 				this.seniority = realY + (!!realM ? " " : "") + realM;
-	
 			},
 			getCopyright: function () {
 				let year = new Date().getFullYear();
