@@ -438,7 +438,7 @@ $(document).ready(function () {
 				let year = (today.getFullYear() - 2019) * 12;
 				let month = today.getMonth() - 10;
 				let realY = (year + month) / 12 < 1 ? ""
-				: ((year + month) / 12 + " 年");
+				: (parseInt((year + month) / 12) + " 年");
 				let realM = (year + month) % 12 === 0 ? ""
 				: ((year + month) % 12 + " 個月");
 				this.seniority = realY + (!!realM ? " " : "") + realM;
